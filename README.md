@@ -123,3 +123,64 @@ This means the cleanup is not just deleting four abstract methods. The implement
 ### Open Question
 
 The main design question is whether the public high-level `Thermocycler` methods should remain and compute values from cached protocol state, or whether those high-level methods should also be removed. Since the issue specifically says these do not need to be methods of a thermocycler backend, my initial plan is to remove them from the backend interface while preserving useful high-level behavior where appropriate.
+
+
+## Week 3: Implementation and Pull Request
+
+### Implementation Summary
+
+I implemented the cleanup for PyLabRobot issue #637 by removing the following unneeded backend methods from `ThermocyclerBackend` and concrete thermocycler backend implementations:
+
+```text
+get_block_target_temperature
+get_lid_target_temperature
+get_total_cycle_count
+get_total_step_count
+```
+
+These methods were removed from the abstract backend interface and from concrete backend files including:
+
+```text
+pylabrobot/thermocycling/backend.py
+pylabrobot/thermocycling/chatterbox.py
+pylabrobot/thermocycling/opentrons_backend.py
+pylabrobot/thermocycling/opentrons_backend_usb.py
+pylabrobot/thermocycling/inheco/odtc_backend.py
+pylabrobot/thermocycling/thermo_fisher/thermo_fisher_thermocycler.py
+```
+
+I also updated the high-level `Thermocycler` wrapper so target temperatures and total protocol counts are tracked through cached state instead of requiring each backend to expose those values as backend commands. The tests were updated to remove expectations for the deleted backend methods.
+
+### Testing
+
+I ran the thermocycling test suite after the implementation:
+
+```bash
+python -m pytest pylabrobot/thermocycling --timeout=10
+```
+
+Result:
+
+```text
+11 passed, 1 skipped
+```
+
+I also ran a grep check to make sure the high-level code and tests no longer call the deleted backend methods directly:
+
+```bash
+grep -R -n "backend.get_total_cycle_count\|backend.get_total_step_count\|backend.get_lid_target_temperature\|backend.get_block_target_temperature" pylabrobot/thermocycling
+```
+
+Result: no output.
+
+### Pull Request
+
+Pull request opened:
+
+```text
+https://github.com/PyLabRobot/pylabrobot/pull/1097
+```
+
+### What I Learned
+
+This contribution helped me understand that even a small backend interface cleanup can require changes across several layers of a codebase. Removing unused abstract methods was only one part of the work. I also had to update concrete backend classes, high-level wrapper logic, and tests so the project still behaved correctly. I also practiced the full open source workflow: choosing an issue, reproducing the current state, creating a feature branch, making code changes, running tests, committing, pushing, and opening a pull request.
