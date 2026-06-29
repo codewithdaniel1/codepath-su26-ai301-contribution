@@ -184,3 +184,32 @@ https://github.com/PyLabRobot/pylabrobot/pull/1097
 ### What I Learned
 
 This contribution helped me understand that even a small backend interface cleanup can require changes across several layers of a codebase. Removing unused abstract methods was only one part of the work. I also had to update concrete backend classes, high-level wrapper logic, and tests so the project still behaved correctly. I also practiced the full open source workflow: choosing an issue, reproducing the current state, creating a feature branch, making code changes, running tests, committing, pushing, and opening a pull request.
+
+
+## Week 4: Submit and Iterate
+
+### Pull Request Submitted
+
+I submitted my pull request to PyLabRobot:
+
+https://github.com/PyLabRobot/pylabrobot/pull/1097
+
+The PR addresses issue #637 by removing unused thermocycler backend methods and updating the related wrapper logic and tests.
+
+### What Changed
+
+I removed unused backend methods from the thermocycler backend interface and concrete backend implementations:
+
+- `get_block_target_temperature`
+- `get_lid_target_temperature`
+- `get_total_cycle_count`
+- `get_total_step_count`
+
+I also updated the high-level `Thermocycler` class so it tracks target temperatures and protocol count information directly instead of requiring each backend to expose those values.
+
+### Testing
+
+I ran the thermocycling test suite:
+
+```bash
+python -m pytest pylabrobot/thermocycling --timeout=10
