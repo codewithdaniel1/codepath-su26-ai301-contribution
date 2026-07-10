@@ -125,33 +125,69 @@ This means the cleanup is not just deleting four abstract methods. The implement
 The main design question is whether the public high-level `Thermocycler` methods should remain and compute values from cached protocol state, or whether those high-level methods should also be removed. Since the issue specifically says these do not need to be methods of a thermocycler backend, my initial plan is to remove them from the backend interface while preserving useful high-level behavior where appropriate.
 
 
-## Week 3: Implementation and Pull Request
+## Week 3: Implementation / Build
 
-### Implementation Summary
+### Implementation Progress
 
-I implemented the cleanup for PyLabRobot issue #637 by removing the following unneeded backend methods from `ThermocyclerBackend` and concrete thermocycler backend implementations:
+During Phase III, I implemented the planned cleanup for PyLabRobot issue #637. The issue asked for unnecessary thermocycler backend methods to be removed from `ThermocyclerBackend`.
+
+Working branch:
 
 ```text
-get_block_target_temperature
-get_lid_target_temperature
-get_total_cycle_count
-get_total_step_count
+https://github.com/codewithdaniel1/pylabrobot/tree/remove-thermocycler-backend-commands
 ```
 
-These methods were removed from the abstract backend interface and from concrete backend files including:
+Key commit:
+
+```text
+8d3a5c6c4 Remove unused thermocycler backend methods
+```
+
+Commit link:
+
+```text
+https://github.com/codewithdaniel1/pylabrobot/commit/8d3a5c6c49f1913f7c0c06e021c9e23525514857
+```
+
+### Code Changes
+
+I removed these unused backend methods:
+
+- `get_block_target_temperature`
+- `get_lid_target_temperature`
+- `get_total_cycle_count`
+- `get_total_step_count`
+
+I removed or updated these methods across the thermocycling backend interface, concrete backend implementations, wrapper logic, and tests.
+
+Files modified:
 
 ```text
 pylabrobot/thermocycling/backend.py
 pylabrobot/thermocycling/chatterbox.py
-pylabrobot/thermocycling/opentrons_backend.py
-pylabrobot/thermocycling/opentrons_backend_usb.py
 pylabrobot/thermocycling/inheco/odtc_backend.py
+pylabrobot/thermocycling/opentrons_backend.py
+pylabrobot/thermocycling/opentrons_backend_tests.py
+pylabrobot/thermocycling/opentrons_backend_usb.py
 pylabrobot/thermocycling/thermo_fisher/thermo_fisher_thermocycler.py
+pylabrobot/thermocycling/thermocycler.py
+pylabrobot/thermocycling/thermocycler_tests.py
 ```
 
-I also updated the high-level `Thermocycler` wrapper so target temperatures and total protocol counts are tracked through cached state instead of requiring each backend to expose those values as backend commands. The tests were updated to remove expectations for the deleted backend methods.
+The main implementation decision was to remove the methods from the backend interface while preserving useful high-level `Thermocycler` behavior. Instead of asking every backend to provide target temperatures and protocol counts, the high-level `Thermocycler` now tracks target temperatures and protocol count information through cached wrapper state.
 
-### Testing
+### Tests Added / Updated
+
+I updated the existing thermocycling tests instead of creating a completely new test file, because the relevant test coverage already lived in:
+
+```text
+pylabrobot/thermocycling/thermocycler_tests.py
+pylabrobot/thermocycling/opentrons_backend_tests.py
+```
+
+The test updates exercise the changed code path by making sure the thermocycler tests no longer depend on removed backend methods. The mock backend no longer defines the deleted methods, and the profile-running logic now uses cached protocol count values from the high-level `Thermocycler`.
+
+### Testing Strategy
 
 I ran the thermocycling test suite after the implementation:
 
@@ -165,25 +201,51 @@ Result:
 11 passed, 1 skipped
 ```
 
-I also ran a grep check to make sure the high-level code and tests no longer call the deleted backend methods directly:
+I also checked that the deleted backend methods were no longer called directly from high-level thermocycling code or tests:
 
 ```bash
 grep -R -n "backend.get_total_cycle_count\|backend.get_total_step_count\|backend.get_lid_target_temperature\|backend.get_block_target_temperature" pylabrobot/thermocycling
 ```
 
-Result: no output.
-
-### Pull Request
-
-Pull request opened:
+Result:
 
 ```text
-https://github.com/PyLabRobot/pylabrobot/pull/1097
+No output
 ```
 
-### What I Learned
+Before committing, I also ran:
 
-This contribution helped me understand that even a small backend interface cleanup can require changes across several layers of a codebase. Removing unused abstract methods was only one part of the work. I also had to update concrete backend classes, high-level wrapper logic, and tests so the project still behaved correctly. I also practiced the full open source workflow: choosing an issue, reproducing the current state, creating a feature branch, making code changes, running tests, committing, pushing, and opening a pull request.
+```bash
+git diff --check
+```
+
+Result:
+
+```text
+No output
+```
+
+### Challenges Faced
+
+The main challenge was that this issue looked like a simple backend cleanup at first, but the removed methods were connected to multiple layers of the codebase. They appeared in the abstract backend interface, concrete backends, the high-level `Thermocycler` wrapper, and tests.
+
+At first, tests still referenced deleted backend methods. I resolved this by updating the high-level `Thermocycler` to cache target temperatures and protocol counts, then updating the tests so they no longer mocked or asserted behavior on removed backend commands.
+
+I also found and fixed cleanup issues before committing, including duplicate cached count fields and extra blank lines at the end of files. Running `git diff --check` helped verify the final diff was clean.
+
+### Self-Review
+
+Before marking Phase III complete, I reviewed the diff to make sure the change was scoped to the issue. I removed temporary helper scripts, avoided unrelated formatting changes, and confirmed only thermocycling backend/interface/test files were modified.
+
+Final diff summary:
+
+```text
+9 files changed, 42 insertions(+), 129 deletions(-)
+```
+
+### Phase III Status
+
+Phase III is complete. The implementation is working locally, tests pass, the branch has a meaningful commit, and the solution is ready to submit as a pull request in Phase IV.
 
 ## Week 4: Submit and Iterate
 
