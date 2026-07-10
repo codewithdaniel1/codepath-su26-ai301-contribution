@@ -194,6 +194,8 @@ I submitted my pull request to PyLabRobot:
 
 https://github.com/PyLabRobot/pylabrobot/pull/1097
 
+Awaiting review / open upstream PR
+
 The PR addresses issue #637 by removing unused thermocycler backend methods and updating the related wrapper logic and tests.
 
 ### What Changed
