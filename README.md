@@ -16,7 +16,7 @@ I chose this issue because it is a small, clearly scoped Python contribution in 
 
 ## Week 2: Reproduce and Plan
 
-### Repository
+### Repository and Branch
 
 Forked repository:
 
@@ -36,9 +36,21 @@ Selected issue:
 https://github.com/PyLabRobot/pylabrobot/issues/637
 ```
 
-### Local Development Setup
+Working branch:
 
-For Week 2, I set up a local development environment using my fork of PyLabRobot. I cloned my fork, connected the original PyLabRobot repository as the upstream remote, created a feature branch from `upstream/main`, and installed the project in editable mode with test dependencies.
+```text
+https://github.com/codewithdaniel1/pylabrobot/tree/remove-thermocycler-backend-commands
+```
+
+Branch name:
+
+```text
+remove-thermocycler-backend-commands
+```
+
+### Environment Setup
+
+I set up PyLabRobot locally from my fork and connected it to the upstream repository. I created a feature branch from `upstream/main` so my work would start from the current upstream codebase.
 
 Commands used:
 
@@ -55,19 +67,90 @@ python -m pip install -U pip
 python -m pip install -e ".[test]"
 ```
 
-The setup completed successfully. The project installed as `PyLabRobot-0.2.1` in editable mode, and the test dependencies installed successfully.
+Setup result:
 
-### Reproducing the Issue
-
-This issue is a backend interface cleanup task rather than a runtime crash. To reproduce the issue, I searched the codebase for the four methods named in the GitHub issue:
-
-```bash
-grep -R "get_block_target_temperature\|get_lid_target_temperature\|get_total_cycle_count\|get_total_step_count" pylabrobot
+```text
+The project installed successfully in editable mode with test dependencies.
 ```
 
-The search confirmed that the four methods are currently defined across multiple thermocycler backend implementations, the abstract backend interface, high-level thermocycler wrapper methods, and tests.
+Setup challenge:
 
-The methods appear in:
+The main setup challenge was understanding that this issue was not a normal runtime bug with a UI or command-line reproduction. It was a backend interface cleanup issue. Because of that, reproducing the issue meant proving that the unwanted backend methods existed across the interface, implementations, wrapper logic, and tests.
+
+I resolved this by searching the codebase for the exact method names from the issue and then running the existing thermocycling test suite to establish a clean baseline before making code changes.
+
+### Reproduction Process
+
+This issue is a backend interface cleanup task rather than a crash. To reproduce the current behavior, I confirmed that the four methods named in the issue were still present in the thermocycling backend code.
+
+Steps to reproduce:
+
+1. Clone the fork and enter the repository.
+
+```bash
+git clone https://github.com/codewithdaniel1/pylabrobot.git
+cd pylabrobot
+```
+
+2. Add the upstream repository and create a working branch from upstream `main`.
+
+```bash
+git remote add upstream https://github.com/PyLabRobot/pylabrobot.git
+git fetch upstream
+git checkout -b remove-thermocycler-backend-commands upstream/main
+```
+
+3. Set up the Python virtual environment and install test dependencies.
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -U pip
+python -m pip install -e ".[test]"
+```
+
+4. Search the thermocycling code for the four methods listed in issue #637.
+
+```bash
+grep -R -n "get_block_target_temperature\|get_lid_target_temperature\|get_total_cycle_count\|get_total_step_count" pylabrobot/thermocycling
+```
+
+5. Observe that the methods are present in the abstract backend interface, concrete backends, wrapper logic, and tests.
+
+6. Run the existing thermocycling test suite to confirm the baseline state before making changes.
+
+```bash
+python -m pytest pylabrobot/thermocycling
+```
+
+Baseline result:
+
+```text
+11 passed, 1 skipped in 0.30s
+```
+
+### Expected vs. Actual Behavior
+
+Expected behavior:
+
+The `ThermocyclerBackend` interface should only include methods that concrete hardware backends truly need to implement. Values that can be derived from protocol data or cached in the high-level wrapper should not require separate backend commands.
+
+Actual behavior:
+
+The following methods were part of `ThermocyclerBackend` and appeared across several concrete backend implementations and tests:
+
+```text
+get_block_target_temperature
+get_lid_target_temperature
+get_total_cycle_count
+get_total_step_count
+```
+
+These methods increased the responsibility of every backend even though the issue indicated they did not need to be backend methods.
+
+### Files and Functions Involved
+
+The search results showed that the issue involved these files:
 
 ```text
 pylabrobot/thermocycling/backend.py
@@ -81,49 +164,103 @@ pylabrobot/thermocycling/opentrons_backend_tests.py
 pylabrobot/thermocycling/thermocycler_tests.py
 ```
 
-I also ran the thermocycling test suite before making changes to establish a baseline:
+The core root-cause file is:
+
+```text
+pylabrobot/thermocycling/backend.py
+```
+
+That file defines `ThermocyclerBackend`, so unnecessary abstract methods there force concrete backends to implement or stub methods that should not be backend-level requirements.
+
+### Root Cause
+
+The root cause is that `ThermocyclerBackend` included methods that represent high-level thermocycler state rather than true backend commands.
+
+Because these methods were defined on the abstract backend interface, each concrete backend had to implement, stub, or test them. This created unnecessary duplication across backend implementations.
+
+The issue is not that these values are never useful. The issue is that they do not need to be methods of a thermocycler backend. Target temperatures and protocol counts can be tracked by the high-level `Thermocycler` wrapper using protocol data and cached state.
+
+### UMPIRE Solution Plan
+
+#### Understand
+
+Issue #637 asks contributors to remove unneeded commands from `ThermocyclerBackend`.
+
+The problem is that `ThermocyclerBackend` includes target-temperature and count methods that are not truly backend-specific. These methods add unnecessary requirements to every backend implementation.
+
+#### Match
+
+I looked for where the methods appeared across the codebase and found the same pattern repeated in several backend files. The high-level `Thermocycler` wrapper already coordinates protocol execution, so it is the better place to preserve useful high-level state such as target temperatures and total protocol counts.
+
+The related test files are:
+
+```text
+pylabrobot/thermocycling/thermocycler_tests.py
+pylabrobot/thermocycling/opentrons_backend_tests.py
+```
+
+These tests show the existing test style and where mocks need to be updated.
+
+#### Plan
+
+1. Remove the four unneeded abstract methods from `pylabrobot/thermocycling/backend.py`.
+2. Remove matching concrete implementations or stubs from:
+   - `pylabrobot/thermocycling/chatterbox.py`
+   - `pylabrobot/thermocycling/opentrons_backend.py`
+   - `pylabrobot/thermocycling/opentrons_backend_usb.py`
+   - `pylabrobot/thermocycling/inheco/odtc_backend.py`
+   - `pylabrobot/thermocycling/thermo_fisher/thermo_fisher_thermocycler.py`
+3. Update `pylabrobot/thermocycling/thermocycler.py` so target temperatures and total protocol counts are tracked through high-level wrapper state instead of backend calls.
+4. Update `pylabrobot/thermocycling/thermocycler_tests.py` so the mock backend no longer defines removed backend methods.
+5. Update `pylabrobot/thermocycling/opentrons_backend_tests.py` so tests no longer assert deleted backend methods.
+6. Run the thermocycling test suite.
+7. Run grep checks to confirm no direct calls to removed backend methods remain.
+8. Run `git diff --check` before committing.
+
+#### Implement
+
+Implementation will happen on this branch:
+
+```text
+https://github.com/codewithdaniel1/pylabrobot/tree/remove-thermocycler-backend-commands
+```
+
+The planned implementation will stay narrowly scoped to thermocycling backend/interface cleanup and related tests.
+
+#### Review
+
+Before opening a PR, I will self-review the diff for:
+
+- unrelated file changes
+- debug code or temporary helper scripts
+- accidental formatting-only changes
+- duplicate fields or stale comments
+- direct backend calls that should have been removed
+
+I will also check the repository’s existing testing patterns in the thermocycling test files and keep the changes consistent with those patterns.
+
+#### Evaluate
+
+The fix will be considered successful when:
+
+- the four methods are removed from `ThermocyclerBackend`
+- concrete thermocycler backends no longer implement or stub those methods
+- high-level `Thermocycler` behavior still works through cached wrapper state
+- relevant tests pass
+- grep confirms no direct calls to deleted backend methods remain
+- `git diff --check` returns no output
+
+Validation commands:
 
 ```bash
-python -m pytest pylabrobot/thermocycling
+python -m pytest pylabrobot/thermocycling --timeout=10
+grep -R -n "backend.get_total_cycle_count\|backend.get_total_step_count\|backend.get_lid_target_temperature\|backend.get_block_target_temperature" pylabrobot/thermocycling
+git diff --check
 ```
 
-Baseline result:
+### Phase II Status
 
-```text
-11 passed, 1 skipped in 0.30s
-```
-
-This confirms that the existing thermocycling tests pass before I make any code changes.
-
-### Initial Findings
-
-The four methods listed in the issue are:
-
-```text
-get_block_target_temperature
-get_lid_target_temperature
-get_total_cycle_count
-get_total_step_count
-```
-
-The search results show that these methods are currently part of the abstract `ThermocyclerBackend` interface and are implemented by several concrete backends. They are also used by `Thermocycler`, especially in helper methods such as waiting for block/lid temperature and checking whether a profile is still running.
-
-This means the cleanup is not just deleting four abstract methods. The implementation will also need to update the high-level `Thermocycler` logic and tests so they no longer rely on backend commands for values that can be derived from protocol or cached state.
-
-### Implementation Plan
-
-1. Remove the four unneeded abstract methods from `ThermocyclerBackend`.
-2. Remove matching implementations from concrete thermocycler backends: `chatterbox.py`, `opentrons_backend.py`, `opentrons_backend_usb.py`, `inheco/odtc_backend.py`, and `thermo_fisher/thermo_fisher_thermocycler.py`.
-3. Update `Thermocycler` so target temperatures and total protocol counts are derived from protocol/state instead of backend calls.
-4. Update `thermocycler_tests.py` so the mock backend no longer defines these removed backend methods.
-5. Update `opentrons_backend_tests.py` if those tests directly expect removed backend methods.
-6. Run the thermocycling tests again.
-7. Run broader tests or linting if the change affects shared backend behavior.
-
-### Open Question
-
-The main design question is whether the public high-level `Thermocycler` methods should remain and compute values from cached protocol state, or whether those high-level methods should also be removed. Since the issue specifically says these do not need to be methods of a thermocycler backend, my initial plan is to remove them from the backend interface while preserving useful high-level behavior where appropriate.
-
+Phase II is complete. I reproduced the issue by confirming the unwanted backend methods existed across the thermocycling backend interface, concrete implementations, wrapper logic, and tests. I created a working branch and wrote a concrete implementation plan using the UMPIRE framework.
 
 ## Week 3: Implementation / Build
 
