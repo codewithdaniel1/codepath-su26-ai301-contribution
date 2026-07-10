@@ -185,33 +185,111 @@ https://github.com/PyLabRobot/pylabrobot/pull/1097
 
 This contribution helped me understand that even a small backend interface cleanup can require changes across several layers of a codebase. Removing unused abstract methods was only one part of the work. I also had to update concrete backend classes, high-level wrapper logic, and tests so the project still behaved correctly. I also practiced the full open source workflow: choosing an issue, reproducing the current state, creating a feature branch, making code changes, running tests, committing, pushing, and opening a pull request.
 
-
 ## Week 4: Submit and Iterate
 
-### Pull Request Submitted
+### Pull Request
 
-I submitted my pull request to PyLabRobot:
+PR link:
 
+```text
 https://github.com/PyLabRobot/pylabrobot/pull/1097
+```
 
+Status:
+
+```text
 Awaiting review / open upstream PR
+```
 
-The PR addresses issue #637 by removing unused thermocycler backend methods and updating the related wrapper logic and tests.
+### PR Description
+
+This pull request addresses PyLabRobot issue #637 by removing unused thermocycler backend methods from `ThermocyclerBackend` and concrete backend implementations. The change also updates the high-level `Thermocycler` wrapper so target temperatures and protocol counts are tracked through wrapper state instead of requiring each backend to expose those values.
+
+Relevant issue:
+
+```text
+Closes #637
+```
 
 ### What Changed
 
-I removed unused backend methods from the thermocycler backend interface and concrete backend implementations:
+Removed these unused backend methods:
 
 - `get_block_target_temperature`
 - `get_lid_target_temperature`
 - `get_total_cycle_count`
 - `get_total_step_count`
 
-I also updated the high-level `Thermocycler` class so it tracks target temperatures and protocol count information directly instead of requiring each backend to expose those values.
+Updated related files in the thermocycling module, including:
 
-### Testing
+```text
+pylabrobot/thermocycling/backend.py
+pylabrobot/thermocycling/chatterbox.py
+pylabrobot/thermocycling/inheco/odtc_backend.py
+pylabrobot/thermocycling/opentrons_backend.py
+pylabrobot/thermocycling/opentrons_backend_tests.py
+pylabrobot/thermocycling/opentrons_backend_usb.py
+pylabrobot/thermocycling/thermo_fisher/thermo_fisher_thermocycler.py
+pylabrobot/thermocycling/thermocycler.py
+pylabrobot/thermocycling/thermocycler_tests.py
+```
+
+### Acceptance Criteria
+
+- [x] PR submitted to upstream repository
+- [x] PR targets upstream `main`
+- [x] PR description explains why the change is needed
+- [x] PR description references the issue with `Closes #637`
+- [x] Acceptance checklist is filled in
+- [x] Test evidence included
+- [x] Maintainer-visible issue comment posted with PR link
+
+### Testing Evidence
 
 I ran the thermocycling test suite:
 
 ```bash
 python -m pytest pylabrobot/thermocycling --timeout=10
+```
+
+Result:
+
+```text
+11 passed, 1 skipped
+```
+
+I also ran:
+
+```bash
+git diff --check
+```
+
+Result:
+
+```text
+No output
+```
+
+### Maintainer Feedback
+
+| Date | Feedback / Action | My Response | Evidence |
+|---|---|---|---|
+| July 9, 2026 | PR submitted and linked on issue #637. No maintainer code review yet. | I updated the PR description with context, `Closes #637`, before/after evidence, checklist, and test output. I also commented on the issue with the PR link and acknowledged the maintainer’s note about the `v1b1` branch. | PR #1097, issue #637 comment, commit `8d3a5c6c4` |
+
+### Current Status
+
+The PR is open and awaiting maintainer review. If maintainers request changes, I will update the branch with follow-up commits and document the feedback loop here.
+
+### Learnings and Reflections
+
+Technical learning:
+
+I learned that removing an interface method can affect multiple layers of a codebase. This was not just deleting methods from one file. I had to update the abstract backend interface, concrete backend implementations, wrapper logic, and tests together.
+
+Open source process learning:
+
+I practiced the full open source workflow: selecting an issue, setting up a fork, creating a feature branch, reproducing the current state, making a scoped code change, running tests, committing, pushing, opening an upstream PR, and communicating with maintainers.
+
+AI/tooling learning:
+
+AI helped me navigate the unfamiliar codebase and think through the test updates, but I stayed responsible for the final code by running tests, checking the diff, fixing whitespace issues, and making sure the PR matched the issue scope.
