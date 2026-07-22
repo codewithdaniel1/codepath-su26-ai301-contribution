@@ -648,3 +648,56 @@ This would build directly on my first contribution. My first PR cleaned up unnec
 ### Reflection
 
 The main lesson this week was that open source issues can evolve as maintainers provide architectural context. Even if a first PR is narrow, maintainer feedback can reveal a larger design direction. A good contributor should be able to keep the current PR scoped while also understanding where the project is heading.
+
+## Week 8: Continued Iteration and Portfolio Reflection
+
+### Current PR Status
+
+PR link:
+
+```text
+https://github.com/PyLabRobot/pylabrobot/pull/1097
+```
+
+Current status:
+
+```text
+Open and awaiting maintainer review
+```
+
+### Work Completed This Week
+
+This week, I reviewed the full contribution cycle from issue selection through PR submission. I focused on making sure the README tells a clear engineering story:
+
+1. I selected a scoped issue.
+2. I reproduced the current state locally.
+3. I identified the files and methods involved.
+4. I wrote a plan using the UMPIRE framework.
+5. I implemented the backend cleanup.
+6. I updated tests and validation steps.
+7. I opened an upstream PR.
+8. I documented the current review status and next steps.
+
+### Interview / Portfolio Notes
+
+This contribution is useful as a portfolio example because it shows that I can work in an unfamiliar codebase and make a scoped backend/interface change.
+
+Important talking points:
+
+- I worked on PyLabRobot, an open-source Python lab automation project.
+- I removed unnecessary methods from an abstract backend interface.
+- I updated concrete backend implementations and related tests.
+- I preserved high-level wrapper behavior through cached state.
+- I ran targeted tests and cleanup checks.
+- I opened an upstream PR and documented the review loop.
+
+### Current Next Steps
+
+- Continue monitoring PR #1097.
+- Respond to maintainer feedback if requested.
+- Push follow-up commits if changes are requested.
+- If this PR remains open with no feedback, consider starting a second contribution cycle in PyLabRobot or another scoped Python project.
+
+### Reflection
+
+The biggest takeaway from this project is that real open-source work is not only about writing code. It requires understanding the issue, reading existing patterns, keeping changes scoped, testing carefully, writing a clear PR, and communicating respectfully with maintainers. This contribution gave me a realistic version of how engineering work happens on a shared codebase.
