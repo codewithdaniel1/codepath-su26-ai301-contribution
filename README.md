@@ -602,3 +602,49 @@ No output
 ### Reflection
 
 This week reinforced that open source work includes both engineering and communication. A reviewer should not have to guess what changed, why it changed, or how it was tested. Clear documentation makes the PR easier to review and also makes the project easier to discuss later in interviews.
+
+## Week 7: Follow-Up Planning and Second Cycle Research
+
+### Current PR Status
+
+PR link:
+
+```text
+https://github.com/PyLabRobot/pylabrobot/pull/1097
+```
+
+Current status:
+
+```text
+Open and awaiting maintainer review
+```
+
+### Work Completed This Week
+
+This week, I continued monitoring PR #1097 and started thinking about what a second contribution cycle could look like if I finish this cycle early or if maintainers suggest that the work should move toward the `v1b1` branch.
+
+The maintainer previously mentioned that PyLabRobot is moving toward a device-centric API with capabilities. Based on that, a possible future direction would be to investigate how a thermocycling capability might fit into the `v1b1` branch.
+
+### Possible Second Cycle Direction
+
+Potential second-cycle topic:
+
+```text
+Investigate thermocycling support in PyLabRobot's v1b1 capabilities model
+```
+
+Possible investigation questions:
+
+- Is there already a thermocycling capability in `v1b1`?
+- How are existing capabilities structured?
+- Which current `Thermocycler` methods belong in a capability?
+- Which methods should remain device-specific?
+- What would be the smallest safe contribution for a first pass?
+
+### Why This Would Be a Good Follow-Up
+
+This would build directly on my first contribution. My first PR cleaned up unnecessary backend methods in the existing thermocycler interface. A second contribution could explore how thermocycling should be represented in the newer capability-based architecture.
+
+### Reflection
+
+The main lesson this week was that open source issues can evolve as maintainers provide architectural context. Even if a first PR is narrow, maintainer feedback can reveal a larger design direction. A good contributor should be able to keep the current PR scoped while also understanding where the project is heading.
