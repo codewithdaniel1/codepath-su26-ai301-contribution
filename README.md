@@ -492,3 +492,49 @@ I practiced the full open source workflow: selecting an issue, setting up a fork
 AI/tooling learning:
 
 AI helped me navigate the unfamiliar codebase and think through the test updates, but I stayed responsible for the final code by running tests, checking the diff, fixing whitespace issues, and making sure the PR matched the issue scope.
+
+## Week 5: Continue Review Loop
+
+### Current PR Status
+
+PR link:
+
+```text
+https://github.com/PyLabRobot/pylabrobot/pull/1097
+```
+
+Current status:
+
+```text
+Open and awaiting maintainer review
+```
+
+### Work Completed This Week
+
+This week, I continued monitoring the open pull request and reviewed the PR description against the CodePath Phase IV rubric. I updated the PR description so it clearly explains the reason for the change before describing the implementation.
+
+The PR description now includes:
+
+- why the backend interface cleanup is needed
+- what methods were removed
+- before / after evidence
+- acceptance criteria checklist
+- test output
+- `Closes #637`
+
+### Maintainer / Reviewer Communication
+
+I also linked the PR back to the original issue so maintainers can easily connect the implementation to issue #637.
+
+Issue comment:
+
+```text
+Opened PR here: https://github.com/PyLabRobot/pylabrobot/pull/1097
+```
+
+I also acknowledged the maintainer’s earlier note about the `v1b1` branch and the capabilities refactor. Since my PR is intentionally scoped to the original issue on `main`, I noted that I am happy to adjust direction or move future work toward `v1b1` if that is preferred.
+
+### Reflection
+
+The biggest lesson this week was that a PR is not finished just because the code is pushed. The written explanation matters because maintainers need to understand the context, the reason for the change, the testing evidence, and the scope of the implementation.
+
