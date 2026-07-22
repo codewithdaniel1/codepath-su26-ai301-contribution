@@ -538,3 +538,67 @@ I also acknowledged the maintainer’s earlier note about the `v1b1` branch and 
 
 The biggest lesson this week was that a PR is not finished just because the code is pushed. The written explanation matters because maintainers need to understand the context, the reason for the change, the testing evidence, and the scope of the implementation.
 
+## Week 6: PR Monitoring and Documentation Cleanup
+
+### Current PR Status
+
+PR link:
+
+```text
+https://github.com/PyLabRobot/pylabrobot/pull/1097
+```
+
+Current status:
+
+```text
+Open and awaiting maintainer review
+```
+
+### Work Completed This Week
+
+This week, I focused on improving the documentation around my contribution so it is easier for CodePath staff, peers, and maintainers to understand the full contribution path.
+
+I reviewed my Contribution README and strengthened the sections for:
+
+- Phase II reproduction and planning
+- Phase III implementation evidence
+- Phase IV pull request submission and iteration
+- maintainer feedback tracking
+- testing evidence
+- lessons learned
+
+### Testing / Validation Notes
+
+The key validation command for my contribution remains:
+
+```bash
+python -m pytest pylabrobot/thermocycling --timeout=10
+```
+
+Result:
+
+```text
+11 passed, 1 skipped
+```
+
+I also used this cleanup check before committing:
+
+```bash
+git diff --check
+```
+
+Result:
+
+```text
+No output
+```
+
+### Feedback Log
+
+| Date | Feedback / Status | My Response | Evidence |
+|---|---|---|---|
+| Week 6 | No new maintainer review yet. PR remains open. | Continued monitoring the PR and improved README documentation so the contribution record is complete. | PR #1097 and Contribution README |
+
+### Reflection
+
+This week reinforced that open source work includes both engineering and communication. A reviewer should not have to guess what changed, why it changed, or how it was tested. Clear documentation makes the PR easier to review and also makes the project easier to discuss later in interviews.
