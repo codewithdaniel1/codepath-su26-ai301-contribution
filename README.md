@@ -701,3 +701,88 @@ Important talking points:
 ### Reflection
 
 The biggest takeaway from this project is that real open-source work is not only about writing code. It requires understanding the issue, reading existing patterns, keeping changes scoped, testing carefully, writing a clear PR, and communicating respectfully with maintainers. This contribution gave me a realistic version of how engineering work happens on a shared codebase.
+
+
+## Week 9: Cycle 2 Issue Selection
+
+### New Issue Selected
+
+For Week 9, I started a second open-source contribution cycle.
+
+Selected issue:
+
+```text
+https://github.com/conda/conda/issues/10491
+```
+
+Project:
+
+```text
+conda/conda
+```
+
+Issue title:
+
+```text
+Documentation of what can be in a package_spec
+```
+
+### Why I Chose This Issue
+
+I chose this issue because it is open, labeled as a good first issue, and focused on documentation. The issue asks for clearer documentation explaining what syntax can appear in a `package_spec` for commands such as `conda install` and `conda create`.
+
+This is a good second contribution because it is scoped, Python/data tooling related, and connects well with my background in Python, data science, and developer tooling. It also lets me practice contributing to a larger and more mature open-source project after completing my first PR in PyLabRobot.
+
+### Issue Summary
+
+The issue explains that `conda install --help` and `conda create --help` mention `package_spec`, but the user-facing documentation does not clearly explain exactly what can appear in a package specification.
+
+The documentation should clarify examples such as:
+
+```text
+conda install scipy
+conda install scipy=0.15.0
+conda install "scipy>=0.15.0"
+conda install "numpy>=1.20,<2"
+```
+
+The issue also asks for clearer explanation of version operators, whether `=` and `==` differ, and what happens when a package is requested without a version constraint.
+
+### Initial Investigation
+
+A comment on the issue points to the `MatchSpec` docstring as an existing source of detailed information about package specification syntax. This suggests the issue is not that the information does not exist anywhere in the codebase, but that it is not clearly surfaced in generated or user-facing documentation.
+
+Potential source file to inspect:
+
+```text
+conda/models/match_spec.py
+```
+
+Potential documentation area to inspect:
+
+```text
+docs/source/
+```
+
+### Comment Posted on Issue
+
+I commented on the issue to introduce myself and express interest in working on it:
+
+```text
+Hi! I’m a student in the CodePath AI301 Open Source program, and I’d like to work on this documentation issue.
+
+I’ll start by checking the current conda docs and CLI help output for package_spec, then identify where a concise explanation of valid package spec syntax should live. My plan is to keep the change documentation-only, add examples for common version/operator formats, and make sure the wording matches existing conda terminology.
+
+Please let me know if there is a preferred documentation page or style pattern I should follow.
+```
+
+### Planned Next Steps
+
+1. Fork `conda/conda` to my GitHub account.
+2. Clone my fork locally.
+3. Add the upstream conda repository as a remote.
+4. Create a branch for issue #10491.
+5. Search the documentation for existing `package_spec` and `MatchSpec` references.
+6. Compare the current docs with the issue request.
+7. Write Phase II reproduction notes showing what documentation is missing or hard to find.
+8. Draft a small documentation-only solution plan.
