@@ -1001,7 +1001,7 @@ This also gave me more practice with the full open-source workflow:
 
 ## Week 9.5 Update: Expanded Open Source Contribution Work
 
-This week I worked across four open-source issues in three repositories: PyLabRobot, conda, and PyPI Warehouse. One issue was an ongoing contribution from earlier in the program, and three were new Week 9 documentation contributions. My main focus was learning how to connect issues, previous PR attempts, maintainer feedback, local validation, clean Git branch management, and duplicate-PR research into a stronger open-source workflow.
+This week I worked across four open-source issues in three repositories: PyLabRobot, conda, and PyPI Warehouse. One issue was an ongoing contribution from earlier in the program, and three were new Week 9 documentation contributions. My main focus was learning how to connect issues, previous PR attempts, maintainer feedback, local validation, clean Git branch management, duplicate-PR research, and post-merge follow-up into a stronger open-source workflow.
 
 ---
 
@@ -1040,11 +1040,11 @@ This issue is still ongoing, so I followed up by checking the PR status and leav
 **Repository:** conda/conda  
 **Issue:** https://github.com/conda/conda/issues/10491  
 **My PR:** https://github.com/conda/conda/pull/16465  
-**Status:** New Week 9 PR / open / mergeable
+**Status:** Merged
 
-This was one of my new Week 9 contributions. Issue #10491 asks for better documentation explaining what can appear in a `package_spec` for commands such as `conda install` and `conda create`.
+This was one of my new Week 9 contributions. Issue #10491 asked for better documentation explaining what can appear in a `package_spec` for commands such as `conda install` and `conda create`.
 
-The issue points out that the help text for `conda install` and `conda create` mentions `package_spec`, but the user-facing documentation did not clearly explain the valid syntax. The issue specifically asks for documentation explaining:
+The issue pointed out that the help text for `conda install` and `conda create` mentions `package_spec`, but the user-facing documentation did not clearly explain the valid syntax. The issue specifically asked for documentation explaining:
 
 - what syntax can appear in a command-line `package_spec`
 - what operators are available
@@ -1076,9 +1076,11 @@ After opening the PR, I received maintainer review feedback and made follow-up c
 - link to CEP 29
 - update the introduction so readers understand that command-line package specs are translated into canonical match specifications
 
-I also investigated the CI status. The Read the Docs build failed because of a PlantUML download timeout from SourceForge, not because of my RST documentation changes. I decided not to make unnecessary changes for an infrastructure/network failure and left the PR ready for maintainer review.
+The PR was approved by a conda maintainer and merged on July 30, 2026. The maintainer called it “a great contribution” and encouraged future contributions.
 
-The PR is currently open, mergeable, and not a draft. It has 5 commits, changes 1 file, and includes 70 additions and 4 deletions.
+After the PR was merged, the original issue author clarified that there may still be deeper caveats around plain package specs, channel selection, and solver behavior that could require separate documentation. I decided not to jump into that discussion unless a maintainer directly asks for a follow-up, because those details involve more advanced conda resolver behavior and should be described carefully.
+
+This contribution is now part of the official `conda/conda` main branch.
 
 ---
 
@@ -1141,6 +1143,8 @@ git diff --cached --check
 
 Result: no output.
 
+After opening the PR, I also commented on issue #633 with a link to PR #1190 so maintainers can connect the issue and pull request. I later updated the PR description to make sure the testing section was formatted correctly and included the `git diff --cached --check` result.
+
 My PR #1190 is now open, mergeable, and not a draft. It changes 2 files with 199 additions.
 
 ---
@@ -1150,15 +1154,15 @@ My PR #1190 is now open, mergeable, and not a draft. It changes 2 files with 199
 **Repository:** pypi/warehouse  
 **Issue:** https://github.com/pypi/warehouse/issues/19413  
 **My PR:** https://github.com/pypi/warehouse/pull/20346  
-**Status:** New Week 9 PR / open / mergeable
+**Status:** Merged
 
-This was my third new Week 9 documentation contribution. Issue #19413 says that the PyPI organization accounts root page is stale because it still says:
+This was my third new Week 9 documentation contribution. Issue #19413 said that the PyPI organization accounts root page was stale because it still said:
 
 ```text
 Organization accounts are coming to PyPI.
 ```
 
-However, organization accounts already exist on PyPI, so the documentation should describe them as an existing feature instead of a future feature.
+However, organization accounts already exist on PyPI, so the documentation needed to describe them as an existing feature instead of a future feature.
 
 Before starting this issue, I did extra due diligence because I had already found one Warehouse issue where another contributor had an open PR for the same work. I checked for related PRs and did not find an active PR that clearly fixed issue #19413. This helped me avoid duplicating another contributor’s work.
 
@@ -1212,13 +1216,15 @@ I opened PR #20346:
 https://github.com/pypi/warehouse/pull/20346
 ```
 
-The PR is currently open, mergeable, and not a draft. It changes 1 file with 2 additions and 4 deletions. The docs checks passed after the PR was opened.
+This PR was approved by a PyPI Warehouse maintainer and merged on July 30, 2026. The merged PR changed 1 file with 2 additions and 4 deletions. This contribution is now part of the official `pypi/warehouse` main branch.
+
+After the PR was merged, GitHub showed the “Delete branch” option for my temporary feature branch. I learned that deleting the feature branch after a merge is safe because it only removes the temporary branch from my fork, not the merged contribution from the upstream project.
 
 ---
 
 ### Overall Week 9.5 Reflection
 
-This week was a strong example of how real open-source contribution is not just about writing code. I worked on four issues across three repositories and had to connect each issue to its related PRs, current status, and maintainer expectations.
+This week was a strong example of how real open-source contribution is not just about writing code. I worked on four issues across three repositories and had to connect each issue to its related PRs, current status, maintainer expectations, and post-merge behavior.
 
 The biggest lessons were:
 
@@ -1230,13 +1236,15 @@ The biggest lessons were:
 - test documentation code locally when possible
 - keep documentation changes tightly scoped to the issue
 - avoid making unnecessary changes when a CI failure is caused by infrastructure instead of my code
+- understand that a merged PR may still lead to follow-up discussion or future documentation gaps
+- understand that deleting a merged feature branch does not delete the upstream contribution
 - write PR descriptions that clearly connect the issue, the solution, and the validation steps
 
-By the end of Week 9.5, I had one ongoing PyLabRobot PR and three new documentation PRs opened:
+By the end of Week 9.5, I had two merged documentation PRs and two ongoing PyLabRobot PRs:
 
-- PyLabRobot PR #1097 for thermocycler backend cleanup
-- conda PR #16465 for command-line package specification documentation
-- PyLabRobot PR #1190 for thermocycler quickstart documentation
-- PyPI Warehouse PR #20346 for stale organization accounts documentation
+- PyPI Warehouse PR #20346 for stale organization accounts documentation — merged
+- conda PR #16465 for command-line package specification documentation — merged
+- PyLabRobot PR #1097 for thermocycler backend cleanup — open and awaiting review
+- PyLabRobot PR #1190 for thermocycler quickstart documentation — open and awaiting review
 
 This week also helped me improve my open-source judgment. I learned not to assume that an open issue is automatically available. Before starting PyPI Warehouse issue #19413, I checked for duplicate or related PRs so I would not repeat the mistake of choosing an issue that another contributor was already actively solving.
