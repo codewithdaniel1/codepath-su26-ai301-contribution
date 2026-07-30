@@ -998,3 +998,157 @@ This also gave me more practice with the full open-source workflow:
 - Respond professionally if maintainers request wording changes.
 - Push follow-up commits if documentation revisions are requested.
 - Update this README with any new review feedback or PR status changes.
+
+## Week 9.5 Update (9.5 because I did a lot of things in week 9)
+
+This week I worked across three open-source issues in two repositories: PyLabRobot and conda. One issue was an ongoing contribution from earlier in the program, and two were new Week 9 documentation contributions. My main focus was learning how to connect issues, previous PR attempts, maintainer feedback, local validation, and clean Git branch management into a stronger open-source workflow.
+
+---
+
+### Issue 1: PyLabRobot #637 — Remove unneeded thermocycler backend commands
+
+**Repository:** PyLabRobot/pylabrobot  
+**Issue:** https://github.com/PyLabRobot/pylabrobot/issues/637  
+**My PR:** https://github.com/PyLabRobot/pylabrobot/pull/1097  
+**Status:** Ongoing / open / mergeable
+
+This was my ongoing PyLabRobot contribution from earlier in the program. Issue #637 asks to remove several methods from `ThermocyclerBackend` because the data does not need to come directly from each backend. The issue specifically lists:
+
+- `get_block_target_temperature`
+- `get_lid_target_temperature`
+- `get_total_cycle_count`
+- `get_total_step_count`
+
+The issue explains that block and lid target temperatures can be retrieved from stage/step data, while total cycle and step counts can be cached from the running protocol. Therefore, these methods do not need to be backend commands.
+
+For my PR #1097, I removed those methods from the abstract backend interface and from concrete thermocycler backend implementations. I also updated the high-level `Thermocycler` wrapper so it can preserve useful behavior without forcing every backend to implement unnecessary methods.
+
+The PR currently remains open and mergeable. It changes 9 files with 42 additions and 129 deletions. I also ran the thermocycling test suite locally and confirmed:
+
+```text
+11 passed, 1 skipped
+```
+
+This issue is still ongoing, so I followed up by checking the PR status and leaving the contribution ready for maintainer review.
+
+---
+
+### Issue 2: conda #10491 — Document what can be in a `package_spec`
+
+**Repository:** conda/conda  
+**Issue:** https://github.com/conda/conda/issues/10491  
+**My PR:** https://github.com/conda/conda/pull/16465  
+**Status:** New Week 9 PR / open / mergeable
+
+This was one of my new Week 9 contributions. Issue #10491 asks for better documentation explaining what can appear in a `package_spec` for commands such as `conda install` and `conda create`.
+
+The issue points out that the help text for `conda install` and `conda create` mentions `package_spec`, but the user-facing documentation did not clearly explain the valid syntax. The issue specifically asks for documentation explaining:
+
+- what syntax can appear in a command-line `package_spec`
+- what operators are available
+- whether there is a difference between examples like `scipy=0.15.0` and `scipy==0.15.0`
+- what happens when a user provides a plain package name like `conda install scipy`
+
+For PR #16465, I updated `docs/source/user-guide/concepts/pkg-specs.rst` and added a dedicated section for command-line package specifications. The PR documents examples such as:
+
+- plain package names, such as `numpy`
+- fuzzy version matches, such as `numpy=1.11`
+- exact version matches, such as `numpy==1.11`
+- comparison constraints, such as `numpy>=1.8`
+- compound constraints, such as `numpy>=1.8,<2`
+- build string constraints, such as `numpy=1.11.2=*nomkl*`
+- channel constraints, such as `conda-forge::numpy`
+- channel/subdir constraints, such as `conda-forge/linux-64::numpy`
+
+After opening the PR, I received maintainer review feedback and made follow-up commits. I updated the PR to:
+
+- clarify the difference between `numpy=1.11` and `numpy==1.11`
+- add channel and subdir examples
+- add a separate “Canonical match specifications” heading
+- link to CEP 29
+- update the introduction so readers understand that command-line package specs are translated into canonical match specifications
+
+I also investigated the CI status. The Read the Docs build failed because of a PlantUML download timeout from SourceForge, not because of my RST documentation changes. I decided not to make unnecessary changes for an infrastructure/network failure and left the PR ready for maintainer review.
+
+The PR is currently open, mergeable, and not a draft. It has 5 commits, changes 1 file, and includes 70 additions and 4 deletions.
+
+---
+
+### Issue 3: PyLabRobot #633 — Add thermocycler documentation
+
+**Repository:** PyLabRobot/pylabrobot  
+**Issue:** https://github.com/PyLabRobot/pylabrobot/issues/633  
+**Related old PR attempt:** https://github.com/PyLabRobot/pylabrobot/pull/640  
+**Related misleading/open PR:** https://github.com/PyLabRobot/pylabrobot/pull/1075  
+**My PR:** https://github.com/PyLabRobot/pylabrobot/pull/1190  
+**Status:** New Week 9 PR / open / mergeable
+
+This was my second new Week 9 contribution. Issue #633 asks for thermocycler documentation. I looked through the issue history before starting because there had already been related PR activity.
+
+I found that PR #640 was an earlier attempt to add a thermocycler demo notebook, but it was closed and not merged. The maintainer feedback on that PR was very useful. The previous attempt used a backend class that did not actually exist in PyLabRobot. The maintainer pointed out that the correct backend to use was likely `ThermocyclerChatterboxBackend`. The maintainer also said that notebook examples should use top-level `await`, avoid unnecessary wrapper functions, and group cells by functionality so users can easily copy and paste examples.
+
+I also noticed PR #1075, which claimed to fix issue #633, but it was still open and not merged. More importantly, it only changed `.gitignore`, so it did not actually solve the thermocycler documentation issue. This helped me understand why issue #633 was still open even though GitHub showed a related PR reference.
+
+Before starting the new PR, I made sure not to accidentally mix this work with my previous PyLabRobot branch for PR #1097. My local repo was still on the old `remove-thermocycler-backend-commands` branch, so I switched back to `main`, pulled the latest `upstream/main`, and created a clean branch:
+
+```text
+docs-thermocycler-633
+```
+
+Then I added a new general quickstart notebook:
+
+```text
+docs/user_guide/01_material-handling/thermocycling/thermocycler-quickstart.ipynb
+```
+
+The notebook uses real PyLabRobot classes:
+
+- `Thermocycler`
+- `ThermocyclerChatterboxBackend`
+- `Protocol`
+- `Stage`
+- `Step`
+
+The notebook demonstrates:
+
+- creating a `Thermocycler`
+- opening and closing the lid
+- setting block and lid temperatures
+- querying temperature, lid, and status values
+- running a custom `Protocol`
+- running a PCR profile
+- deactivating the block and lid
+
+I also updated the thermocycling overview page so it links to the new quickstart notebook:
+
+```text
+docs/user_guide/01_material-handling/thermocycling/thermocycling.md
+```
+
+Before opening the PR, I validated the notebook code locally as an async Python script. The script successfully printed the expected chatterbox output for lid control, temperature control, status queries, a custom protocol, and a PCR profile. I also ran:
+
+```bash
+git diff --cached --check
+```
+
+Result: no output.
+
+My PR #1190 is now open, mergeable, and not a draft. It changes 2 files with 199 additions.
+
+---
+
+### Overall Week 9 Reflection
+
+This week was a good example of how real open-source contribution is not just about writing code. I worked on three issues across two repositories and had to connect each issue to its related PRs, current status, and maintainer expectations.
+
+The biggest lessons were:
+
+- always create a new branch from a clean `upstream/main` before starting a new issue
+- do not let changes from one PR accidentally leak into another PR
+- read old PR attempts before starting, because they often contain valuable maintainer feedback
+- verify that documentation examples use real project APIs
+- test documentation code locally when possible
+- avoid making unnecessary changes when a CI failure is caused by infrastructure instead of my code
+- write PR descriptions that clearly connect the issue, the solution, and the validation steps
+
+By the end of Week 9, I had one ongoing PyLabRobot PR and two new documentation PRs opened: one for conda package specification documentation and one for PyLabRobot thermocycler quickstart documentation.
