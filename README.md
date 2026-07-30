@@ -1078,8 +1078,6 @@ The PR is currently open, mergeable, and not a draft. It has 5 commits, changes 
 
 **Repository:** PyLabRobot/pylabrobot  
 **Issue:** https://github.com/PyLabRobot/pylabrobot/issues/633  
-**Related old PR attempt:** https://github.com/PyLabRobot/pylabrobot/pull/640  
-**Related misleading/open PR:** https://github.com/PyLabRobot/pylabrobot/pull/1075  
 **My PR:** https://github.com/PyLabRobot/pylabrobot/pull/1190  
 **Status:** New Week 9 PR / open / mergeable
 
