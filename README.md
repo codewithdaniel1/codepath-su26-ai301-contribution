@@ -999,9 +999,9 @@ This also gave me more practice with the full open-source workflow:
 - Push follow-up commits if documentation revisions are requested.
 - Update this README with any new review feedback or PR status changes.
 
-## Week 9.5 Update (9.5 because I did a lot of things in week 9)
+## Week 9.5 Update: Expanded Open Source Contribution Work
 
-This week I worked across three open-source issues in two repositories: PyLabRobot and conda. One issue was an ongoing contribution from earlier in the program, and two were new Week 9 documentation contributions. My main focus was learning how to connect issues, previous PR attempts, maintainer feedback, local validation, and clean Git branch management into a stronger open-source workflow.
+This week I worked across four open-source issues in three repositories: PyLabRobot, conda, and PyPI Warehouse. One issue was an ongoing contribution from earlier in the program, and three were new Week 9 documentation contributions. My main focus was learning how to connect issues, previous PR attempts, maintainer feedback, local validation, clean Git branch management, and duplicate-PR research into a stronger open-source workflow.
 
 ---
 
@@ -1012,7 +1012,9 @@ This week I worked across three open-source issues in two repositories: PyLabRob
 **My PR:** https://github.com/PyLabRobot/pylabrobot/pull/1097  
 **Status:** Ongoing / open / mergeable
 
-This was my ongoing PyLabRobot contribution from earlier in the program. Issue #637 asks to remove several methods from `ThermocyclerBackend` because the data does not need to come directly from each backend. The issue specifically lists:
+This was my ongoing PyLabRobot contribution from earlier in the program. Issue #637 asks contributors to remove several methods from `ThermocyclerBackend` because the data does not need to come directly from each backend.
+
+The issue specifically lists:
 
 - `get_block_target_temperature`
 - `get_lid_target_temperature`
@@ -1049,7 +1051,13 @@ The issue points out that the help text for `conda install` and `conda create` m
 - whether there is a difference between examples like `scipy=0.15.0` and `scipy==0.15.0`
 - what happens when a user provides a plain package name like `conda install scipy`
 
-For PR #16465, I updated `docs/source/user-guide/concepts/pkg-specs.rst` and added a dedicated section for command-line package specifications. The PR documents examples such as:
+For PR #16465, I updated:
+
+```text
+docs/source/user-guide/concepts/pkg-specs.rst
+```
+
+I added a dedicated section for command-line package specifications. The PR documents examples such as:
 
 - plain package names, such as `numpy`
 - fuzzy version matches, such as `numpy=1.11`
@@ -1078,6 +1086,8 @@ The PR is currently open, mergeable, and not a draft. It has 5 commits, changes 
 
 **Repository:** PyLabRobot/pylabrobot  
 **Issue:** https://github.com/PyLabRobot/pylabrobot/issues/633  
+**Related old PR attempt:** https://github.com/PyLabRobot/pylabrobot/pull/640  
+**Related misleading/open PR:** https://github.com/PyLabRobot/pylabrobot/pull/1075  
 **My PR:** https://github.com/PyLabRobot/pylabrobot/pull/1190  
 **Status:** New Week 9 PR / open / mergeable
 
@@ -1135,18 +1145,98 @@ My PR #1190 is now open, mergeable, and not a draft. It changes 2 files with 199
 
 ---
 
-### Overall Week 9 Reflection
+### Issue 4: PyPI Warehouse #19413 — Update stale organization accounts documentation
 
-This week was a good example of how real open-source contribution is not just about writing code. I worked on three issues across two repositories and had to connect each issue to its related PRs, current status, and maintainer expectations.
+**Repository:** pypi/warehouse  
+**Issue:** https://github.com/pypi/warehouse/issues/19413  
+**My PR:** https://github.com/pypi/warehouse/pull/20346  
+**Status:** New Week 9 PR / open / mergeable
+
+This was my third new Week 9 documentation contribution. Issue #19413 says that the PyPI organization accounts root page is stale because it still says:
+
+```text
+Organization accounts are coming to PyPI.
+```
+
+However, organization accounts already exist on PyPI, so the documentation should describe them as an existing feature instead of a future feature.
+
+Before starting this issue, I did extra due diligence because I had already found one Warehouse issue where another contributor had an open PR for the same work. I checked for related PRs and did not find an active PR that clearly fixed issue #19413. This helped me avoid duplicating another contributor’s work.
+
+I forked the Warehouse repository:
+
+```text
+https://github.com/codewithdaniel1/warehouse
+```
+
+Then I cloned the upstream repository, connected my fork as `origin`, renamed the upstream remote to `upstream`, and created a clean branch:
+
+```text
+docs-organization-accounts-19413
+```
+
+The file I updated was:
+
+```text
+docs/user/organization-accounts/index.md
+```
+
+I changed the intro from:
+
+```text
+Organization accounts are coming to PyPI.
+In an organization account,
+users from an organization or community project
+can assemble into teams and collaborate on projects.
+```
+
+to:
+
+```text
+PyPI organization accounts let users from an organization or community project
+assemble into teams and collaborate on projects.
+```
+
+This kept the change small and directly scoped to the issue. I did not rewrite unrelated parts of the page.
+
+Before committing, I ran:
+
+```bash
+git diff --check
+```
+
+Result: no output.
+
+I opened PR #20346:
+
+```text
+https://github.com/pypi/warehouse/pull/20346
+```
+
+The PR is currently open, mergeable, and not a draft. It changes 1 file with 2 additions and 4 deletions. The docs checks passed after the PR was opened.
+
+---
+
+### Overall Week 9.5 Reflection
+
+This week was a strong example of how real open-source contribution is not just about writing code. I worked on four issues across three repositories and had to connect each issue to its related PRs, current status, and maintainer expectations.
 
 The biggest lessons were:
 
 - always create a new branch from a clean `upstream/main` before starting a new issue
 - do not let changes from one PR accidentally leak into another PR
 - read old PR attempts before starting, because they often contain valuable maintainer feedback
+- check whether an issue already has an open PR before starting work
 - verify that documentation examples use real project APIs
 - test documentation code locally when possible
+- keep documentation changes tightly scoped to the issue
 - avoid making unnecessary changes when a CI failure is caused by infrastructure instead of my code
 - write PR descriptions that clearly connect the issue, the solution, and the validation steps
 
-By the end of Week 9, I had one ongoing PyLabRobot PR and two new documentation PRs opened: one for conda package specification documentation and one for PyLabRobot thermocycler quickstart documentation.
+By the end of Week 9.5, I had one ongoing PyLabRobot PR and three new documentation PRs opened:
+
+- PyLabRobot PR #1097 for thermocycler backend cleanup
+- conda PR #16465 for command-line package specification documentation
+- PyLabRobot PR #1190 for thermocycler quickstart documentation
+- PyPI Warehouse PR #20346 for stale organization accounts documentation
+
+This week also helped me improve my open-source judgment. I learned not to assume that an open issue is automatically available. Before starting PyPI Warehouse issue #19413, I checked for duplicate or related PRs so I would not repeat the mistake of choosing an issue that another contributor was already actively solving.
