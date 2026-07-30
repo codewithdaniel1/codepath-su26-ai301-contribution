@@ -702,8 +702,7 @@ Important talking points:
 
 The biggest takeaway from this project is that real open-source work is not only about writing code. It requires understanding the issue, reading existing patterns, keeping changes scoped, testing carefully, writing a clear PR, and communicating respectfully with maintainers. This contribution gave me a realistic version of how engineering work happens on a shared codebase.
 
-
-## Week 9: Cycle 2 Issue Selection
+## Week 9: Cycle 2 — Conda Documentation PR
 
 ### New Issue Selected
 
@@ -727,17 +726,25 @@ Issue title:
 Documentation of what can be in a package_spec
 ```
 
+Pull request:
+
+```text
+https://github.com/conda/conda/pull/16465
+```
+
 ### Why I Chose This Issue
 
-I chose this issue because it is open, labeled as a good first issue, and focused on documentation. The issue asks for clearer documentation explaining what syntax can appear in a `package_spec` for commands such as `conda install` and `conda create`.
+I chose this issue because it was open, labeled as a good first issue, and focused on documentation. The issue asks for clearer documentation explaining what syntax can appear in a `package_spec` for commands such as `conda install` and `conda create`.
 
-This is a good second contribution because it is scoped, Python/data tooling related, and connects well with my background in Python, data science, and developer tooling. It also lets me practice contributing to a larger and more mature open-source project after completing my first PR in PyLabRobot.
+This was a good second contribution because it was smaller and more scoped than a large code change, but still required me to read an unfamiliar codebase, understand existing documentation structure, and make a useful user-facing improvement.
+
+It also connects well with my background in Python, data science, and developer tooling because conda is widely used in Python and data science workflows.
 
 ### Issue Summary
 
-The issue explains that `conda install --help` and `conda create --help` mention `package_spec`, but the user-facing documentation does not clearly explain exactly what can appear in a package specification.
+The issue explains that `conda install --help` and `conda create --help` mention `package_spec`, but the user-facing documentation does not clearly explain exactly what forms are valid.
 
-The documentation should clarify examples such as:
+The documentation needed clearer examples for package specifications such as:
 
 ```text
 conda install scipy
@@ -746,42 +753,248 @@ conda install "scipy>=0.15.0"
 conda install "numpy>=1.20,<2"
 ```
 
-The issue also asks for clearer explanation of version operators, whether `=` and `==` differ, and what happens when a package is requested without a version constraint.
+The issue also asked for clearer explanation of version operators, whether `=` and `==` differ, and what happens when a package is requested without a version constraint.
 
 ### Initial Investigation
 
-A comment on the issue points to the `MatchSpec` docstring as an existing source of detailed information about package specification syntax. This suggests the issue is not that the information does not exist anywhere in the codebase, but that it is not clearly surfaced in generated or user-facing documentation.
+I reviewed the issue discussion and found that another contributor had pointed to the `MatchSpec` docstring as an existing source of detailed package specification information. This helped clarify the problem: the information existed in the codebase, but it was not clearly surfaced in user-facing documentation.
 
-Potential source file to inspect:
+Relevant source file investigated:
 
 ```text
 conda/models/match_spec.py
 ```
 
-Potential documentation area to inspect:
+Relevant documentation file investigated and updated:
 
 ```text
-docs/source/
+docs/source/user-guide/concepts/pkg-specs.rst
 ```
 
-### Comment Posted on Issue
+### Local Setup
 
-I commented on the issue to introduce myself and express interest in working on it:
+I forked the conda repository and created a branch for this issue.
+
+Fork:
 
 ```text
-Hi! I’m a student in the CodePath AI301 Open Source program, and I’d like to work on this documentation issue.
-
-I’ll start by checking the current conda docs and CLI help output for package_spec, then identify where a concise explanation of valid package spec syntax should live. My plan is to keep the change documentation-only, add examples for common version/operator formats, and make sure the wording matches existing conda terminology.
-
-Please let me know if there is a preferred documentation page or style pattern I should follow.
+https://github.com/codewithdaniel1/conda
 ```
 
-Week 9 / Cycle 2 Phase I Complete
+Branch:
 
-I selected a new issue for my second contribution cycle: conda/conda#10491, “Documentation of what can be in a package_spec.” The issue is open, labeled good first issue, and documentation-focused.
+```text
+docs-package-spec-10491
+```
 
-I commented on the issue introducing myself and explaining my plan. My next step is to fork conda, create a working branch, inspect the existing docs and MatchSpec docstring, and write Phase II reproduction notes showing where package_spec syntax is unclear or missing from user-facing documentation.
+Branch link:
 
-Issue: https://github.com/conda/conda/issues/10491
-Planned branch: https://github.com/codewithdaniel1/conda/tree/docs-package-spec-10491
+```text
+https://github.com/codewithdaniel1/conda/tree/docs-package-spec-10491
+```
 
+Commands used:
+
+```bash
+cd ~
+git clone https://github.com/codewithdaniel1/conda.git
+cd conda
+git remote add upstream https://github.com/conda/conda.git
+git fetch upstream
+git checkout -b docs-package-spec-10491 upstream/main
+git push origin docs-package-spec-10491
+```
+
+### Reproduction / Documentation Gap
+
+To reproduce the documentation gap, I searched the conda documentation and source code for package specification references.
+
+Commands used:
+
+```bash
+grep -R -n "package_spec" docs conda | head -50
+grep -R -n "MatchSpec" docs conda | head -50
+grep -R -n "conda install" docs/source | head -50
+grep -R -n "conda create" docs/source | head -50
+```
+
+What I found:
+
+- There was already a package specifications page.
+- The existing documentation explained package match specifications.
+- The command-line `package_spec` concept was not as easy to find or understand from the user perspective.
+- There was room to add a concise command-line-focused subsection with examples.
+
+### Implementation
+
+I updated:
+
+```text
+docs/source/user-guide/concepts/pkg-specs.rst
+```
+
+I added a new section:
+
+```text
+Command-line package specifications
+```
+
+The new documentation explains common forms such as:
+
+```text
+numpy
+numpy=1.11
+numpy==1.11
+numpy>=1.8
+numpy>=1.8,<2
+numpy=1.11.2=*nomkl*
+```
+
+The update also explains:
+
+- supported version operators
+- comma-separated AND constraints
+- pipe-separated OR constraints
+- wildcard usage
+- shell quoting for special characters
+- what happens when no version constraint is provided
+
+### Commit
+
+Key commit:
+
+```text
+e5139ffd6 Clarify command-line package specifications
+```
+
+Commit summary:
+
+```text
+1 file changed, 52 insertions(+)
+```
+
+### Pull Request
+
+I opened an upstream PR:
+
+```text
+https://github.com/conda/conda/pull/16465
+```
+
+PR title:
+
+```text
+Clarify command-line package specifications
+```
+
+PR status:
+
+```text
+Open and awaiting maintainer review
+```
+
+The PR includes:
+
+- explanation of the documentation problem
+- link to issue #10491
+- summary of the new examples added
+- documentation-only scope note
+- checklist responses
+- testing/validation notes
+
+### Testing and Validation
+
+I ran:
+
+```bash
+git diff --check
+```
+
+Result:
+
+```text
+No output
+```
+
+This confirmed there were no whitespace errors in the documentation diff.
+
+After opening the PR, the following checks passed:
+
+```text
+pre-commit.ci - pr
+docs/readthedocs.com:continuumio-conda
+```
+
+### Current CI / Review Status
+
+Current PR status:
+
+```text
+Open
+Mergeable
+Not a draft
+```
+
+Current checks:
+
+```text
+pre-commit.ci - pr: passing
+Read the Docs: passing
+CLA check: pending / needs refresh after signing
+```
+
+The PR is currently blocked from merging because:
+
+```text
+Code owner review is required
+CLA check still needs to update
+Maintainer approval is required for workflow/review
+```
+
+This is expected for a first-time contributor to a large open-source project.
+
+### Maintainer / Issue Communication
+
+I commented on issue #10491 to introduce myself and explain that I wanted to work on the documentation issue.
+
+After opening the PR, I also linked the PR back to the issue so maintainers can easily connect the implementation to the original request.
+
+Issue comment summary:
+
+```text
+I opened PR #16465 for this issue and added a command-line package specifications section to the package specification docs.
+```
+
+### Challenges Faced
+
+The main challenge was choosing the correct location for the documentation update. The issue mentioned `package_spec`, while the existing documentation used the broader concept of `MatchSpec` and package match specifications. I had to avoid creating duplicate or conflicting documentation.
+
+I resolved this by adding a focused subsection inside the existing package specifications page instead of creating a separate new page. This kept the change small and aligned with the current documentation structure.
+
+Another challenge was understanding the difference between a documentation-only change and a code change. Since this PR does not alter solver logic or package matching behavior, I did not add automated tests or a news entry. Instead, I validated the documentation diff with `git diff --check` and relied on the Read the Docs build and pre-commit checks.
+
+### Reflection
+
+This second contribution helped me practice a different kind of open-source work. My first contribution was a backend interface cleanup in PyLabRobot. This second contribution was a documentation improvement in conda.
+
+The main lesson is that documentation contributions still require technical understanding. I had to read the issue, inspect the existing docs, search the codebase, understand `MatchSpec` terminology, and place the new explanation in the right location.
+
+This also gave me more practice with the full open-source workflow:
+
+1. selecting a new issue
+2. commenting on the issue
+3. forking the repository
+4. creating a branch
+5. making a scoped change
+6. committing and pushing
+7. opening an upstream PR
+8. monitoring checks
+9. documenting current review status
+
+### Next Steps
+
+- Wait for the CLA check to update after signing.
+- Monitor the PR for maintainer feedback.
+- Respond professionally if maintainers request wording changes.
+- Push follow-up commits if documentation revisions are requested.
+- Update this README with any new review feedback or PR status changes.
