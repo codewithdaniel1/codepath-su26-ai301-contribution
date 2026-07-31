@@ -702,21 +702,22 @@ Important talking points:
 
 The biggest takeaway from this project is that real open-source work is not only about writing code. It requires understanding the issue, reading existing patterns, keeping changes scoped, testing carefully, writing a clear PR, and communicating respectfully with maintainers. This contribution gave me a realistic version of how engineering work happens on a shared codebase.
 
-## Week 9: Cycle 2 — Open Source Contribution Expansion
+## Week 9: Open Source Contribution Expansion
 
-For Week 9, I continued into a second open-source contribution cycle. My goal was to move beyond one repository and practice contributing across multiple real-world projects with different maintainer expectations, review processes, and contribution styles.
+### Week 9 Summary
 
-During this cycle, I worked on documentation, backend cleanup, tutorial examples, and cybersecurity documentation consistency.
+During Week 9, I expanded my open-source contribution work across Python, analytics, cybersecurity documentation, scientific automation, and developer tooling repositories.
 
-By the end of Week 9, I had:
+By the end of the week, I had:
 
-- 2 merged pull requests
-- 3 open pull requests
-- Contributions across 4 major open-source repositories:
+- 2 merged PRs
+- 4 open PRs
+- Contributions across 5 major or career-relevant repositories:
   - `conda/conda`
   - `pypi/warehouse`
   - `PyLabRobot/pylabrobot`
   - `OWASP/CheatSheetSeries`
+  - `apache/superset`
 
 ---
 
@@ -731,180 +732,28 @@ By the end of Week 9, I had:
 
 #### Why I selected this issue
 
-I chose this issue because it was open, labeled as a good first issue, and focused on documentation. The issue asked for clearer documentation explaining what syntax can appear in a `package_spec` for commands such as `conda install` and `conda create`.
+I selected this issue because `conda` is a major Python ecosystem project, and the issue was focused on improving documentation around command-line package specifications.
 
-This was a good second contribution because it was smaller and more scoped than a large code change, but still required me to read an unfamiliar codebase, understand the existing documentation structure, and make a useful user-facing improvement.
+The issue was a good fit because it required reading existing documentation, understanding how package specifications work, and improving user-facing explanations without changing runtime behavior.
 
-It also connects well with my background in Python, data science, and developer tooling because conda is widely used in Python and data science workflows.
+#### What I changed
 
-#### Issue summary
+I opened PR #16465 to clarify command-line `package_spec` documentation for commands such as:
 
-The issue explained that `conda install --help` and `conda create --help` mention `package_spec`, but the user-facing documentation did not clearly explain exactly what forms are valid.
+- `conda install`
+- `conda create`
 
-The documentation needed clearer examples for package specifications such as:
+The update explained how users can specify packages, versions, and related constraints from the command line.
 
-- `conda install scipy`
-- `conda install scipy=0.15.0`
-- `conda install "scipy>=0.15.0"`
-- `conda install "numpy>=1.20,<2"`
+#### Validation
 
-The issue also asked for clearer explanation of version operators, whether `=` and `==` differ, and what happens when a package is requested without a version constraint.
-
-#### Initial investigation
-
-I reviewed the issue discussion and found that another contributor had pointed to the `MatchSpec` docstring as an existing source of detailed package specification information.
-
-This helped clarify the problem: the information existed in the codebase, but it was not clearly surfaced in user-facing documentation.
-
-Relevant source file investigated:
-
-- `conda/models/match_spec.py`
-
-Relevant documentation file investigated and updated:
-
-- `docs/source/user-guide/concepts/pkg-specs.rst`
-
-#### Local setup
-
-I forked the conda repository and created a branch for this issue.
-
-Fork:
-
-- `https://github.com/codewithdaniel1/conda`
-
-Branch:
-
-- `docs-package-spec-10491`
-
-Branch link:
-
-- `https://github.com/codewithdaniel1/conda/tree/docs-package-spec-10491`
-
-Commands used:
-
-    cd ~
-    git clone https://github.com/codewithdaniel1/conda.git
-    cd conda
-    git remote add upstream https://github.com/conda/conda.git
-    git fetch upstream
-    git checkout -b docs-package-spec-10491 upstream/main
-    git push origin docs-package-spec-10491
-
-#### Reproduction / documentation gap
-
-To reproduce the documentation gap, I searched the conda documentation and source code for package specification references.
-
-Commands used:
-
-    grep -R -n "package_spec" docs conda | head -50
-    grep -R -n "MatchSpec" docs conda | head -50
-    grep -R -n "conda install" docs/source | head -50
-    grep -R -n "conda create" docs/source | head -50
-
-What I found:
-
-- There was already a package specifications page.
-- The existing documentation explained package match specifications.
-- The command-line `package_spec` concept was not as easy to find or understand from the user perspective.
-- There was room to add a concise command-line-focused subsection with examples.
-
-#### Implementation
-
-I updated:
-
-- `docs/source/user-guide/concepts/pkg-specs.rst`
-
-I added a new section:
-
-- `Command-line package specifications`
-
-The new documentation explains common forms such as:
-
-- `numpy`
-- `numpy=1.11`
-- `numpy==1.11`
-- `numpy>=1.8`
-- `numpy>=1.8,<2`
-- `numpy=1.11.2=*nomkl*`
-
-The update also explains:
-
-- Supported version operators
-- Comma-separated AND constraints
-- Pipe-separated OR constraints
-- Wildcard usage
-- Shell quoting for special characters
-- What happens when no version constraint is provided
-- How channel and subdir examples fit into package specifications
-
-#### Commit
-
-Key commit:
-
-- `e5139ffd6 Clarify command-line package specifications`
-
-Initial commit summary:
-
-- 1 file changed
-- 52 insertions
-
-#### Pull request
-
-I opened an upstream PR:
-
-- `https://github.com/conda/conda/pull/16465`
-
-PR title:
-
-- `Clarify command-line package specifications`
-
-The PR included:
-
-- Explanation of the documentation problem
-- Link to issue #10491
-- Summary of the new examples added
-- Documentation-only scope note
-- Checklist responses
-- Testing and validation notes
-
-#### Testing and validation
-
-I ran:
-
-    git diff --check
-
-Result:
-
-- No output
-
-This confirmed there were no whitespace errors in the documentation diff.
-
-After opening the PR, automated checks such as pre-commit and documentation builds ran through the normal project workflow.
-
-#### Review process
-
-The PR received maintainer feedback asking for several improvements, including:
-
-- Adding a clearer section heading
-- Linking to the canonical match specification reference
-- Clarifying examples involving `numpy=1.11` and `numpy==1.11`
-- Adding examples involving channels and subdirectories
-
-I updated the PR based on that feedback.
+I kept the change documentation-only and checked that the formatting was clean before submitting.
 
 #### Current status
 
-The PR was merged.
+The PR was reviewed and merged.
 
-This became one of my first merged pull requests in a major Python ecosystem repository.
-
-One follow-up discussion noted that the merged PR improved part of the documentation, but did not fully address every caveat originally discussed in the issue. I decided not to over-comment after merge because the maintainers had already merged the PR, and the remaining caveats could be handled separately if maintainers wanted additional follow-up work.
-
-#### Reflection
-
-This contribution helped me practice a different kind of open-source work. My first contribution was a backend interface cleanup in PyLabRobot. This second contribution was a documentation improvement in conda.
-
-The main lesson is that documentation contributions still require technical understanding. I had to read the issue, inspect the existing docs, search the codebase, understand `MatchSpec` terminology, and place the new explanation in the right location.
+This became one of my merged open-source contributions in a major Python ecosystem repository.
 
 ---
 
@@ -925,33 +774,13 @@ I selected this issue because it was a small but clear documentation problem in 
 
 The documentation page for organization accounts still said that organization accounts were “coming to PyPI,” even though organization accounts were already available. This made the documentation stale and potentially confusing for users.
 
-This was a good issue because it was narrow, easy to verify, and located in an important Python ecosystem project.
-
-#### Initial investigation
-
-Before working on the issue, I checked whether another active pull request already fixed it. I wanted to avoid duplicating someone else’s work.
-
-I searched the repository and found the stale wording in:
-
-- `docs/user/organization-accounts/index.md`
-
-#### Implementation
+#### What I changed
 
 I opened PR #20346 to update the organization accounts introduction.
 
 The change replaced stale future-tense wording with current wording that describes PyPI organization accounts as an existing feature.
 
-Original meaning:
-
-- Organization accounts are coming to PyPI.
-
-Updated meaning:
-
-- PyPI organization accounts are already available and allow users from an organization or community project to assemble into teams and collaborate on projects.
-
 #### Validation
-
-I kept the change intentionally small and limited it to the stale introductory wording.
 
 I verified that:
 
@@ -960,13 +789,9 @@ I verified that:
 - No unrelated files were modified.
 - There was no active duplicate PR already fixing the same issue.
 
-#### Review process
-
-The PR was reviewed and approved by a maintainer with a short “Thanks!” review.
-
 #### Current status
 
-The PR was merged.
+The PR was reviewed, approved, and merged.
 
 This became another merged documentation contribution in a major Python ecosystem repository.
 
@@ -989,34 +814,37 @@ This issue was a good fit because it was labeled as a good first issue and focus
 
 It also gave me a chance to work in a real Python scientific automation repository while keeping the scope focused.
 
-The issue asked for several thermocycler backend methods to be removed because their behavior could be handled at a higher abstraction level instead of requiring backend-specific commands.
-
 #### What I changed
 
-I opened PR #1097 to remove unused thermocycler backend methods while preserving the high-level `Thermocycler` behavior through wrapper state.
+I opened PR #1097 to remove unused thermocycler backend methods while preserving high-level `Thermocycler` behavior through wrapper state.
 
 The cleanup removed unnecessary backend method requirements and reduced the backend API surface area.
-
-The goal was to make the implementation simpler while keeping existing thermocycler workflows functional.
 
 #### Validation
 
 I ran the thermocycling test suite locally:
 
-    python -m pytest pylabrobot/thermocycling --timeout=10
+```bash
+python -m pytest pylabrobot/thermocycling --timeout=10
+```
 
 Result:
 
-- 11 passed
-- 1 skipped
+```text
+11 passed, 1 skipped
+```
 
 I also ran:
 
-    git diff --check
+```bash
+git diff --check
+```
 
 Result:
 
-- No output
+```text
+No output
+```
 
 #### Current status
 
@@ -1037,9 +865,7 @@ The PR is open, mergeable, and awaiting maintainer review.
 
 #### Why I selected this issue
 
-This issue was a good continuation after working on the thermocycler backend cleanup. The project needed thermocycler documentation, and the maintainer had previously suggested using Jupyter notebooks to show setup, quickstart examples, and core machine functionality.
-
-This gave me a chance to contribute documentation that would help future users understand how to use the thermocycler interface.
+This issue was a good continuation after working on the thermocycler backend cleanup. The project needed thermocycler documentation, and the maintainer had previously suggested using notebooks to show setup, quickstart examples, and core machine functionality.
 
 #### What I changed
 
@@ -1065,17 +891,19 @@ I converted the notebook logic into an async Python script and ran it locally to
 
 I also ran:
 
-    git diff --cached --check
+```bash
+git diff --cached --check
+```
 
 Result:
 
-- No output
+```text
+No output
+```
 
 #### Current status
 
 The PR is open, mergeable, and awaiting maintainer review.
-
-I also commented on the original issue to link the PR and summarize what the notebook covers.
 
 ---
 
@@ -1096,24 +924,6 @@ This issue was a good fit because it is a documentation-quality improvement in a
 
 A previous Phase 1 cleanup PR handled part of the corpus, but additional occurrences remained. I chose a small continuation slice rather than attempting to clean the entire repository at once.
 
-This felt like the right open-source strategy because smaller PRs are easier for maintainers to review and less likely to introduce accidental changes to technical content.
-
-#### Initial investigation
-
-I forked the OWASP CheatSheetSeries repository and created a clean branch from upstream `master`.
-
-Fork:
-
-- `https://github.com/codewithdaniel1/CheatSheetSeries`
-
-Branch:
-
-- `continue-us-english-cleanup-2266`
-
-I then searched the cheat sheet corpus for British-to-US English spelling terms listed in the issue.
-
-The search showed that Phase 1 cleanup was not fully complete. Remaining matches existed across multiple cheat sheets, so I selected a small safe slice instead of trying to fix everything at once.
-
 #### What I changed
 
 I opened PR #2316 to normalize British-to-US English spellings in three additional cheat sheets:
@@ -1133,24 +943,16 @@ The changes are wording/style-only. I avoided changing:
 - Quoted titles
 - Proper names
 
-Examples of the cleanup included spelling changes such as:
-
-- `organisation` to `organization`
-- `whilst` to `while`
-- `defence` to `defense`
-- `defences` to `defenses`
-- `authorised` to `authorized`
-
 #### Validation
 
-I ran the following checks locally:
+I ran:
 
-    git diff --check
-    npm test
+```bash
+git diff --check
+npm test
+```
 
 I also ran a targeted grep check against the British spelling terms listed in the issue for the three updated files.
-
-The updated files returned no remaining matches from that term list.
 
 #### Current status
 
@@ -1160,15 +962,134 @@ I also commented on the issue to explain that PR #2316 continues Phase 1 cleanup
 
 ---
 
+### Issue 6: Apache Superset #33206 — Preserve decimals in mixed numeric IN filters
+
+- **Repository:** `apache/superset`
+- **Issue:** [#33206](https://github.com/apache/superset/issues/33206)
+- **PR:** [#42625](https://github.com/apache/superset/pull/42625)
+- **Status:** Open / mergeable / awaiting maintainer review
+- **Type:** Backend SQL generation / analytics filtering bug
+- **Branch:** `investigate-numeric-filter-33206`
+- **Files changed:** 2
+- **Diff size:** +92 / -0
+
+#### Why I selected this issue
+
+I selected this issue because Apache Superset is a major open-source analytics and BI platform. The issue involved numeric filtering behavior that is relevant to dashboarding, risk analytics, fraud monitoring, and data analysis workflows.
+
+The issue reported that filtering mixed numeric values such as integers and decimals behaved differently depending on which value was selected first. If an integer value was selected first, decimal values could be incorrectly filtered. If a decimal value was selected first, the filter worked as expected.
+
+#### Investigation
+
+I checked previous closed PRs linked to the issue and saw that earlier attempts converted numeric values to floats. Maintainers had concerns about that approach because converting integers to floats can lose precision, especially for large integer IDs.
+
+Because of that, I avoided the earlier approach and investigated the actual code path instead.
+
+I tested several layers:
+
+- Frontend select filter behavior
+- Backend filter value handling
+- `filter_values_handler`
+- SQLAlchemy `IN` clause compilation
+
+The key discovery was that SQLAlchemy infers the type of expanding `IN` parameters from the first value in the list.
+
+For example:
+
+```python
+[21, 21.8, 25.35]
+```
+
+could compile to:
+
+```sql
+IN (21, 21, 25)
+```
+
+But:
+
+```python
+[21.8, 21, 25.35]
+```
+
+compiled correctly as:
+
+```sql
+IN (21.8, 21, 25.35)
+```
+
+This matched the behavior described in the issue.
+
+#### What I changed
+
+I opened PR #42625 to fix the mixed numeric `IN` filter behavior.
+
+The fix preserves the original numeric values and only reorders mixed integer/decimal `IN` lists when an integer appears first and a decimal appears later. SQL `IN` list ordering does not change filter semantics, but placing a decimal first prevents SQLAlchemy from coercing later decimal values to integers.
+
+This avoids the risky approach of converting all integers to floats.
+
+#### Tests added
+
+I added regression tests to confirm that:
+
+- decimal values are preserved when an integer appears first
+- decimal-first numeric `IN` lists continue to compile correctly
+- the generated SQL does not collapse decimal values into integers
+
+#### Validation
+
+I ran the targeted tests:
+
+```bash
+python -m pytest tests/unit_tests/models/helpers_test.py \
+  -k "numeric_in_filter_preserves" -q
+```
+
+Result:
+
+```text
+2 passed, 147 deselected, 1 warning
+```
+
+I also ran the full helper test file:
+
+```bash
+python -m pytest tests/unit_tests/models/helpers_test.py -q
+```
+
+Result:
+
+```text
+149 passed, 1 warning
+```
+
+I ran pre-commit on the changed files:
+
+```bash
+pre-commit run --files superset/models/helpers.py tests/unit_tests/models/helpers_test.py
+```
+
+Result:
+
+```text
+Passed
+```
+
+#### Current status
+
+The PR is open and mergeable. Codecov reported patch coverage feedback, but the local regression tests pass and the PR is awaiting maintainer review.
+
+---
+
 ## Overall Week 9 Reflection
 
-Week 9 helped me understand how open-source contribution work is not just about writing code. A lot of the work involved reading issues carefully, checking whether duplicate PRs already existed, understanding maintainer expectations, keeping PRs small, and writing clear PR descriptions.
+Week 9 helped me understand that open-source contribution work is not just about writing code. A lot of the work involved reading issues carefully, checking whether duplicate PRs already existed, understanding maintainer expectations, keeping PRs small, and writing clear PR descriptions.
 
-The most important lesson was that a small, focused PR is often better than a large PR that tries to solve everything at once. For example, with OWASP CheatSheetSeries #2266, I could have tried to clean every remaining British spelling occurrence, but I intentionally chose a smaller three-file slice so the PR would be easier to review.
+The most important lesson was that a small, focused PR is often better than a large PR that tries to solve everything at once. For example, with OWASP CheatSheetSeries #2266, I intentionally chose a smaller three-file cleanup slice so the PR would be easier to review and less likely to accidentally change technical content.
 
-I also learned that documentation contributions can still be meaningful, especially in major repositories. My merged PRs to `conda/conda` and `pypi/warehouse` improved documentation in important Python ecosystem projects. My open PRs to `PyLabRobot/pylabrobot` and `OWASP/CheatSheetSeries` show continued work across scientific automation and cybersecurity documentation.
+I also learned that documentation contributions can still be meaningful, especially in major repositories. My merged PRs to `conda/conda` and `pypi/warehouse` improved documentation in important Python ecosystem projects. My open PRs to `PyLabRobot/pylabrobot`, `OWASP/CheatSheetSeries`, and `apache/superset` show continued work across scientific automation, cybersecurity documentation, and analytics tooling.
 
-This week also gave me more practice with the full open-source workflow:
+This week gave me more practice with the full open-source workflow:
 
 1. Selecting new issues
 2. Checking for duplicate PRs
@@ -1178,16 +1099,17 @@ This week also gave me more practice with the full open-source workflow:
 6. Making small, reviewable changes
 7. Running local validation checks
 8. Opening upstream PRs
-9. Responding to maintainer feedback
+9. Responding to CI and bot feedback
 10. Updating documentation based on current PR status
 
-By the end of Week 9, I had two merged PRs and three open PRs. This gave me stronger evidence that I can contribute to real open-source projects, communicate with maintainers, respond to review feedback, and keep changes scoped appropriately.
+By the end of Week 9, I had two merged PRs and four open PRs. This gave me stronger evidence that I can contribute to real open-source projects, communicate with maintainers, respond to review feedback, and keep changes scoped appropriately.
 
 ## Next Steps
 
 - Wait for maintainer review on PyLabRobot PR #1097.
 - Wait for maintainer review on PyLabRobot PR #1190.
 - Wait for maintainer review and CI feedback on OWASP CheatSheetSeries PR #2316.
-- Avoid adding more commits to PR #2316 unless maintainers request changes.
-- If PR #2316 is accepted, consider a separate follow-up PR for another small Phase 1 cleanup slice.
+- Wait for maintainer review on Apache Superset PR #42625.
+- Avoid adding more commits to open PRs unless maintainers request changes or required CI checks fail.
+- If OWASP PR #2316 is accepted, consider a separate follow-up PR for another small Phase 1 cleanup slice.
 - Do not begin Phase 2 enforcement for OWASP CheatSheetSeries #2266 until Phase 1 cleanup is complete or maintainers confirm the preferred approach.
