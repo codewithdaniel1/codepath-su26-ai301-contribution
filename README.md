@@ -1113,3 +1113,672 @@ By the end of Week 9, I had two merged PRs and four open PRs. This gave me stron
 - Avoid adding more commits to open PRs unless maintainers request changes or required CI checks fail.
 - If OWASP PR #2316 is accepted, consider a separate follow-up PR for another small Phase 1 cleanup slice.
 - Do not begin Phase 2 enforcement for OWASP CheatSheetSeries #2266 until Phase 1 cleanup is complete or maintainers confirm the preferred approach.
+
+
+## Week 10: Contribution Expansion, Maintainer Feedback, and PR Updates
+
+### Week 10 Summary
+
+During Week 10, I continued monitoring the pull requests documented in Week 9 and significantly expanded my open-source contribution work.
+
+This week included contributions to:
+
+- `conda/conda`
+- `OWASP/CheatSheetSeries`
+- `elastic/kibana`
+- `osirislab/ctf101`
+- `docker/docs`
+- `OpenCTI-Platform/opencti`
+- `pypi/warehouse`
+- `jupyterlab/jupyterlab`
+- `apache/airflow`
+
+My work included cybersecurity documentation, Python ecosystem documentation, analytics bug fixing, container documentation, threat-intelligence documentation, and developer-tool documentation.
+
+---
+
+## Updates to Pull Requests Documented in Week 9
+
+### Conda #16465 — Clarify command-line package specifications
+
+- **PR:** [#16465](https://github.com/conda/conda/pull/16465)
+- **Week 9 status:** Merged
+- **Week 10 update:** Remains merged
+
+This contribution is complete and requires no additional action.
+
+---
+
+### PyPI Warehouse #20346 — Update organization accounts intro
+
+- **PR:** [#20346](https://github.com/pypi/warehouse/pull/20346)
+- **Week 9 status:** Merged
+- **Week 10 update:** Remains merged
+
+This contribution is complete and requires no additional action.
+
+---
+
+### PyLabRobot #1097 — Remove unused thermocycler backend methods
+
+- **PR:** [#1097](https://github.com/PyLabRobot/pylabrobot/pull/1097)
+- **Week 9 status:** Open and awaiting review
+- **Week 10 update:** Closed without merge
+
+The PR removed unnecessary methods from `ThermocyclerBackend`, updated concrete backends, preserved high-level wrapper behavior, and updated the relevant tests.
+
+Although the PR was not merged, the contribution gave me experience making a multi-file backend interface change and working through an upstream contribution process.
+
+---
+
+### PyLabRobot #1190 — Add thermocycler quickstart notebook
+
+- **PR:** [#1190](https://github.com/PyLabRobot/pylabrobot/pull/1190)
+- **Week 9 status:** Open and awaiting review
+- **Week 10 update:** Closed without merge
+
+The PR added a runnable thermocycler quickstart notebook using `ThermocyclerChatterboxBackend`, allowing users to follow the documentation without physical hardware.
+
+Although it was not merged, the work remains useful as an example of technical documentation, asynchronous Python examples, and scientific automation tooling.
+
+---
+
+### OWASP CheatSheetSeries #2316 — Normalize US English in three cheat sheets
+
+- **PR:** [#2316](https://github.com/OWASP/CheatSheetSeries/pull/2316)
+- **Week 9 status:** Open
+- **Week 10 update:** Merged
+
+This was the first part of my contribution to OWASP issue #2266. It normalized British-to-US English spelling in three security cheat sheets without changing technical meaning, recommendations, citations, URLs, anchors, code identifiers, or proper names.
+
+Its acceptance allowed me to continue the remaining Phase 1 cleanup in additional focused pull requests.
+
+---
+
+### Apache Superset #42625 — Preserve decimals in mixed numeric IN filters
+
+- **PR:** [#42625](https://github.com/apache/superset/pull/42625)
+- **Week 9 status:** Open and mergeable
+- **Week 10 update:** Still open
+
+The PR continues to address the SQLAlchemy mixed numeric `IN` filter issue. The local regression tests and full helper test file pass, and the branch remains under upstream review.
+
+I did not add unrelated changes while waiting for maintainer feedback.
+
+---
+
+## New Pull Requests Added During Week 10
+
+### OWASP CheatSheetSeries #2333 — US English cleanup, part 2
+
+- **PR:** [#2333](https://github.com/OWASP/CheatSheetSeries/pull/2333)
+- **Status:** Merged
+- **Type:** Cybersecurity documentation cleanup
+
+This PR continued Phase 1 of issue #2266 by normalizing British English spellings in:
+
+- `Clickjacking_Defense_Cheat_Sheet.md`
+- `Cross_Site_Scripting_Prevention_Cheat_Sheet.md`
+- `Server_Side_Request_Forgery_Prevention_Cheat_Sheet.md`
+
+The changes were limited to prose spelling. I preserved URLs, anchors, code identifiers, technical claims, recommendations, and technical meaning.
+
+Validation:
+
+```bash
+npm test
+git diff --check
+```
+
+---
+
+### OWASP CheatSheetSeries #2334 — US English cleanup, part 3
+
+- **PR:** [#2334](https://github.com/OWASP/CheatSheetSeries/pull/2334)
+- **Status:** Merged
+- **Type:** Cybersecurity documentation cleanup
+
+This PR continued the cleanup in:
+
+- `Cryptographic_Storage_Cheat_Sheet.md`
+- `Mobile_Application_Security_Cheat_Sheet.md`
+- `Secure_Product_Design_Cheat_Sheet.md`
+
+Examples included changing `minimise` to `minimize`, `initialisation` to `initialization`, and `Defence in Depth` to `Defense in Depth`.
+
+No technical guidance or citations were changed.
+
+Validation:
+
+```bash
+npm test
+git diff --check
+```
+
+---
+
+### OWASP CheatSheetSeries #2335 — Final Phase 1 spelling sweep
+
+- **PR:** [#2335](https://github.com/OWASP/CheatSheetSeries/pull/2335)
+- **Status:** Merged
+- **Type:** Coordinated cybersecurity documentation cleanup
+
+This PR completed the remaining Phase 1 cleanup for issue #2266.
+
+It normalized 15 British English spellings across 13 cheat sheets while intentionally preserving matches found inside:
+
+- direct quotations
+- quoted examples
+- URLs and anchors
+- external project names
+- proper names
+
+The larger scope was approved by the maintainer because it completed the coordinated Phase 1 cleanup.
+
+Validation included:
+
+```bash
+npm test
+git diff --check
+```
+
+I also reviewed every remaining search match manually.
+
+---
+
+### OWASP CheatSheetSeries #2338 — Enforce US English through textlint
+
+- **PR:** [#2338](https://github.com/OWASP/CheatSheetSeries/pull/2338)
+- **Status:** Merged
+- **Type:** Documentation tooling and automated enforcement
+
+After Phase 1 cleanup was complete, I implemented Phase 2 of issue #2266.
+
+This PR added British-to-US English terminology mappings to the existing `textlint-rule-terminology` configuration. It also added narrow exceptions for direct quotations, quoted security-question examples, and the proper name `Grey Magic`.
+
+Validation included:
+
+```bash
+npm test
+```
+
+I also confirmed that textlint rejects a test occurrence of:
+
+```text
+behaviour
+```
+
+and recommends:
+
+```text
+behavior
+```
+
+This contribution moved beyond manual cleanup and added automated protection against future terminology drift.
+
+---
+
+### Elastic Kibana #282198 — Warn before deleting linked exception lists
+
+- **PR:** [#282198](https://github.com/elastic/kibana/pull/282198)
+- **Status:** Merged
+- **Type:** Cybersecurity API documentation
+
+This PR added a warning to the Delete Exception List API documentation.
+
+The warning tells users to remove or unlink an exception list from detection rules before deleting it. This helps prevent rules from continuing to reference an exception list that no longer exists.
+
+The PR was documentation-only and did not change:
+
+- runtime behavior
+- API behavior
+- configuration
+- data handling
+
+Backport pull requests were also created for supported Kibana release branches.
+
+---
+
+### CTF101 #66 — Improve light-mode logo contrast
+
+- **PR:** [#66](https://github.com/osirislab/ctf101/pull/66)
+- **Status:** Merged
+- **Type:** Documentation website accessibility and visual improvement
+
+This PR improved the CTF101 logo’s visibility against the light-mode header.
+
+I added a light-mode logo variant, preserved the green prompt symbol, changed only the light-mode header logo, and kept dark mode unchanged.
+
+Validation included:
+
+```bash
+mkdocs serve
+git diff --check
+git diff --stat
+```
+
+I visually tested both light and dark modes locally.
+
+---
+
+### CTF101 #67 — Apply logo fix to the deployment branch
+
+- **PR:** [#67](https://github.com/osirislab/ctf101/pull/67)
+- **Status:** Closed without merge
+- **Type:** Deployment follow-up
+
+After PR #66 was merged into `master`, I learned that the live CTF101 website was being served from the `gh-pages` branch.
+
+I opened PR #67 to apply the same final logo update directly to that branch. The PR was later closed without merge, but it helped identify the difference between the project’s source branch and deployed website branch.
+
+---
+
+### CTF101 #70 — Add Google Analytics tracking
+
+- **PR:** [#70](https://github.com/osirislab/ctf101/pull/70)
+- **Status:** Open
+- **Type:** Website analytics configuration
+
+This PR adds GA4 tracking to CTF101 using an OSIRIS-controlled Google Analytics measurement ID.
+
+The implementation:
+
+- loads the Google tag through `mkdocs.yml`
+- adds a local analytics initializer
+- documents the analytics setup in the README
+- avoids tying the analytics property to my personal Google account
+
+Validation included:
+
+```bash
+git diff --cached --check
+mkdocs serve
+```
+
+I also confirmed in browser developer tools that the GA4 script loaded with the expected measurement ID.
+
+---
+
+### CTF101 #74 — Document pwndbg installation and setup
+
+- **PR:** [#74](https://github.com/osirislab/ctf101/pull/74)
+- **Status:** Open and mergeable
+- **Type:** Cybersecurity and binary-exploitation documentation
+
+This PR adds a beginner-focused pwndbg setup guide covering:
+
+- supported environments
+- Linux installation
+- Homebrew installation on macOS
+- GDB and LLDB options
+- source installation
+- installation verification
+- opening challenge binaries
+- passing arguments
+- common setup problems
+
+The page is also added to the Binary Exploitation navigation.
+
+A reviewer suggested adding pwndbg’s decompiler integration feature. Before responding, I searched the repository and confirmed that CTF101 already had general decompiler documentation but did not have pwndbg-specific integration documentation.
+
+I added a focused section and linked the official pwndbg guide without duplicating the site’s existing explanation of decompilers.
+
+Validation:
+
+```bash
+source .venv/bin/activate
+mkdocs build --strict
+git diff --check
+```
+
+The strict documentation build completed successfully.
+
+---
+
+### CTF101 #75 — Fix stack-pointer values in call diagrams
+
+- **PR:** [#75](https://github.com/osirislab/ctf101/pull/75)
+- **Status:** Open
+- **Type:** Cybersecurity education accuracy fix
+
+This PR corrects inconsistent `ESP` values in the CTF101 stack walkthrough.
+
+The previous diagrams showed register values that did not match the stack-pointer arrows after:
+
+- calling `printf`
+- executing `leave`
+- executing `ret`
+
+The update also clarifies that `ret` advances `esp` by four bytes and restores it to the value it had immediately before the caller executed `call`.
+
+Validation:
+
+```bash
+git diff --check
+mkdocs build --strict
+```
+
+---
+
+### Conda #16476 — Update environment import command
+
+- **PR:** [#16476](https://github.com/conda/conda/pull/16476)
+- **Status:** Merged
+- **Type:** Python ecosystem documentation
+
+This PR updated the Conda cheatsheet’s YAML environment import example.
+
+The change replaced the older example:
+
+```bash
+conda create --name ENVNAME --file ENV.yml
+```
+
+with the current documented form:
+
+```bash
+conda create --file ENV.yml
+```
+
+The change was intentionally narrow and did not attempt to resolve all web and PDF cheatsheet differences.
+
+---
+
+### Conda #16478 — Document activation inside Bash scripts
+
+- **PR:** [#16478](https://github.com/conda/conda/pull/16478)
+- **Status:** Merged
+- **Type:** Python environment documentation
+
+This PR documented why `conda activate` may work in an interactive terminal but fail inside a non-interactive Bash script.
+
+It added the pattern:
+
+```bash
+eval "$(conda shell.bash hook)"
+conda activate myenv
+```
+
+It also documented `conda run -n myenv <command>` as an alternative for running one command inside an environment.
+
+---
+
+### Conda #16483 — Add authenticated channels guide
+
+- **PR:** [#16483](https://github.com/conda/conda/pull/16483)
+- **Status:** Merged
+- **Type:** Python package-management documentation
+
+This PR added a new task guide for authenticated Conda channels.
+
+The guide covers:
+
+- installing `conda-auth`
+- HTTP basic authentication
+- token authentication
+- Anaconda.org channel-name behavior
+- logging out and removing stored credentials
+- password and token security
+- related plugin and configuration documentation
+
+---
+
+### Conda #16484 — Update the channels concept page
+
+- **PR:** [#16484](https://github.com/conda/conda/pull/16484)
+- **Status:** Merged
+- **Type:** Python ecosystem documentation
+
+This PR clarified the difference between channels and multichannels.
+
+It added examples for:
+
+- `defaults`
+- `main`
+- `conda-forge`
+- `bioconda`
+
+It also improved examples for `--channel` and `--override-channels`, linked to Anaconda.org, and added guidance about local channels.
+
+---
+
+### Conda #16485 — Update the commands concept page
+
+- **PR:** [#16485](https://github.com/conda/conda/pull/16485)
+- **Status:** Merged
+- **Type:** Python command-line documentation
+
+This PR expanded the Conda commands concept page with examples for:
+
+- `conda create`
+- `conda install`
+- `conda update`
+- `conda remove`
+- `--help`
+- `-h`
+
+It also explained that plugins can provide additional commands and that command-providing plugins must be installed in the base environment.
+
+---
+
+### PyPI Warehouse #20352 — Additional API token authentication options
+
+- **PR:** [#20352](https://github.com/pypi/warehouse/pull/20352)
+- **Status:** Open
+- **Type:** Python packaging and authentication documentation
+
+This PR adds guidance after the `.pypirc` examples on PyPI’s API token documentation page.
+
+It links users to:
+
+- Twine authentication documentation
+- keyring-based credential handling
+- Trusted Publishing for supported automated environments
+
+Validation:
+
+```bash
+git diff --check
+```
+
+---
+
+### OpenCTI #17460 — Explain bulk observable creation
+
+- **PR:** [#17460](https://github.com/OpenCTI-Platform/opencti/pull/17460)
+- **Status:** Merged
+- **Type:** Cyber-threat-intelligence documentation
+
+This PR documented how OpenCTI handles manual creation of multiple observables.
+
+It explains that single-value bulk creation works when OpenCTI can map each input line to a clear identifying field. Multi-field types such as `Software` should instead be created individually or imported through a CSV mapper.
+
+Validation:
+
+```bash
+git diff --check
+```
+
+---
+
+### OpenCTI #17482 — Document Elasticsearch storage performance
+
+- **PR:** [#17482](https://github.com/OpenCTI-Platform/opencti/pull/17482)
+- **Status:** Open
+- **Type:** Threat-intelligence deployment documentation
+
+This PR adds storage-performance guidance for OpenCTI’s Elasticsearch or OpenSearch deployment.
+
+It explains that:
+
+- production systems should use SSD-backed storage
+- NVMe is recommended for large or extra-large deployments
+- disk I/O may be the bottleneck when ingestion queues continue growing and adding workers does not help
+
+The change intentionally avoids unrelated storage capacity-planning estimates.
+
+---
+
+### OpenCTI #17483 — Clarify STIX IDs for imported objects
+
+- **PR:** [#17483](https://github.com/OpenCTI-Platform/opencti/pull/17483)
+- **Status:** Open
+- **Type:** Cyber-threat-intelligence and STIX documentation
+
+This PR clarifies that OpenCTI’s displayed `Standard STIX ID` is the platform’s canonical identifier.
+
+It also explains that imported or source STIX IDs may differ and may appear as additional OpenCTI STIX IDs or external references.
+
+The guidance helps users correlate OpenCTI data with TAXII feeds and other external CTI repositories.
+
+---
+
+### OpenCTI #17484 — Add a PyCTI CSV mapper example
+
+- **PR:** [#17484](https://github.com/OpenCTI-Platform/opencti/pull/17484)
+- **Status:** Open
+- **Type:** Python client example and threat-intelligence documentation
+
+This PR adds a PyCTI example showing how to:
+
+- upload a CSV file
+- find the `[FILE] CSV Mapper import` connector
+- select a mapper by name
+- trigger a CSV mapper import
+- reuse the mapper configuration returned by OpenCTI
+
+Validation:
+
+```bash
+python3 -m py_compile client-python/examples/import_csv_with_mapper.py
+git diff --cached --check
+```
+
+---
+
+### Docker Docs #25689 — Remove misleading linked-container wording
+
+- **PR:** [#25689](https://github.com/docker/docs/pull/25689)
+- **Status:** Open
+- **Type:** Container documentation cleanup
+
+This PR removes a misleading sentence suggesting that restart policies start linked containers in the correct order.
+
+Restart policies are container-level behavior, while the phrase `linked containers` can be confused with Docker’s legacy `--link` feature.
+
+---
+
+### Docker Docs #25690 — Clarify NVIDIA GPU access scope
+
+- **PR:** [#25690](https://github.com/docker/docs/pull/25690)
+- **Status:** Open
+- **Type:** Container and GPU documentation
+
+This PR clarifies a note about NVIDIA GPU access.
+
+The previous wording referred to a `single engine` without defining the term. The revised text frames the statement around standalone Docker Engine containers running on a single host.
+
+---
+
+### Docker Docs #25698 — Clarify OCI and Docker exporter output modes
+
+- **PR:** [#25698](https://github.com/docker/docs/pull/25698)
+- **Status:** Open
+- **Type:** BuildKit and container-image documentation
+
+This PR clarifies how the OCI and Docker exporters use the `dest` and `tar` parameters.
+
+It adds examples for:
+
+- OCI output as a tar archive
+- OCI output as an unpacked directory
+- Docker exporter output loaded into the local image store
+- Docker exporter output saved to disk
+
+---
+
+### JupyterLab #19230 — Document theme-aware extension styles
+
+- **PR:** [#19230](https://github.com/jupyterlab/jupyterlab/pull/19230)
+- **Status:** Open
+- **Type:** Frontend extension documentation
+
+This PR adds guidance for extension authors who need their styles to adapt to the active JupyterLab theme.
+
+It explains why extensions should use public JupyterLab CSS variables instead of hard-coded colors and provides examples using variables such as:
+
+```css
+--jp-ui-font-color1
+--jp-layout-color1
+--jp-border-color1
+```
+
+This helps extensions work across light, dark, high-contrast, and custom themes.
+
+---
+
+### Apache Airflow #70842 — Describe default Airflow loggers
+
+- **PR:** [#70842](https://github.com/apache/airflow/pull/70842)
+- **Status:** Open
+- **Type:** Python workflow and logging documentation
+
+This PR adds a focused `Default Airflow loggers` section to the logging and monitoring architecture documentation.
+
+It explains commonly referenced loggers, including:
+
+- `root`
+- `airflow.task`
+- `airflow.processor`
+- `airflow.processor_manager`
+- `flask_appbuilder`
+
+It also links readers to the existing task-logging and advanced logging-configuration documentation.
+
+Validation:
+
+```bash
+git diff --check
+git diff --stat
+```
+
+Result:
+
+```text
+1 file changed, 30 insertions(+)
+```
+
+---
+
+## Week 10 Results
+
+During Week 10, I:
+
+- received a merge for the first OWASP cleanup PR documented in Week 9
+- completed and merged the remaining OWASP Phase 1 cleanup
+- implemented and merged Phase 2 automated terminology enforcement
+- had multiple Conda documentation contributions merged
+- had an Elastic Kibana cybersecurity documentation PR merged
+- had an OpenCTI threat-intelligence documentation PR merged
+- had a CTF101 visual website improvement merged
+- opened new contributions across CTF101, Docker, OpenCTI, PyPI, JupyterLab, and Apache Airflow
+- responded to reviewer feedback on CTF101 PR #74
+- continued monitoring Apache Superset PR #42625
+
+## Week 10 Reflection
+
+Week 10 showed me how quickly open-source work can expand once I become comfortable with the contribution workflow.
+
+I practiced identifying scoped issues, checking existing documentation, reviewing past pull requests, following repository-specific contribution requirements, validating changes locally, and responding to maintainers.
+
+The most important lesson was that each repository has different expectations. OWASP required detailed AI disclosures and careful protection of technical meaning. Kibana required documentation, risk, and backport considerations. Conda required documentation structure and release-note decisions. CTF101 required local MkDocs validation and reviewer iteration.
+
+I also learned that not every contribution will be merged. Some pull requests may be closed because of project direction, branch changes, overlapping work, or maintainer priorities. Even when that happens, the investigation, implementation, testing, and communication remain valuable engineering experience.
+
+## Next Steps
+
+- Continue monitoring open pull requests for maintainer feedback.
+- Respond only when reviewers request changes or CI identifies a real issue.
+- Avoid unnecessary commits to pull requests already under review.
+- Continue prioritizing small, focused, and clearly validated contributions.
+- Document merged, closed, and updated PR statuses accurately in the next weekly submission.
